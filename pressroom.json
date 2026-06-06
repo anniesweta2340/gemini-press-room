@@ -1081,5 +1081,127 @@
       "draft": "Create a practitioner-written comparison piece targeting CS teams under 50 people that walks through how Gemini fits into real small-team workflows — think triage automation, ticket summarization, and async handoff notes — with honest per-seat pricing context and specific use cases for teams without dedicated ops or AI resources. The content should read like something a CS lead would share in a Slack community or subreddit: specific, experience-grounded, and sized for the actual constraints of a lean team rather than an enterprise rollout. Format it as a structured but conversational guide that mirrors the editorial style community and practitioner-focused platforms favor — concrete scenarios over feature lists, and clear answers to 'would this work for a team our size' questions.",
       "confidence": 0.92
     }
+  ],
+  "outreach": [
+    {
+      "prompt": "most private ai chatbot",
+      "sources": [
+        {
+          "domain": "reddit.com",
+          "channel": "Community",
+          "share": 9.8
+        },
+        {
+          "domain": "privacyguides.org",
+          "channel": "Editorial",
+          "share": 6.6
+        },
+        {
+          "domain": "youtube.com",
+          "channel": "Creator",
+          "share": 5.7
+        }
+      ]
+    },
+    {
+      "prompt": "what ai do professional translators use",
+      "sources": [
+        {
+          "domain": "translastars.com",
+          "channel": "Editorial",
+          "share": 13.7
+        },
+        {
+          "domain": "lokalise.com",
+          "channel": "Vendor",
+          "share": 7
+        },
+        {
+          "domain": "youtube.com",
+          "channel": "Creator",
+          "share": 4.3
+        }
+      ]
+    },
+    {
+      "prompt": "ai for ocr on receipts and invoices",
+      "sources": [
+        {
+          "domain": "koncile.ai",
+          "channel": "Vendor",
+          "share": 6.1
+        },
+        {
+          "domain": "reddit.com",
+          "channel": "Community",
+          "share": 5.6
+        },
+        {
+          "domain": "klippa.com",
+          "channel": "Vendor",
+          "share": 5.2
+        }
+      ]
+    },
+    {
+      "prompt": "ai for grad school research",
+      "sources": [
+        {
+          "domain": "youtube.com",
+          "channel": "Creator",
+          "share": 10.2
+        },
+        {
+          "domain": "reddit.com",
+          "channel": "Community",
+          "share": 9.6
+        },
+        {
+          "domain": "scholarcy.com",
+          "channel": "Vendor",
+          "share": 7.9
+        }
+      ]
+    },
+    {
+      "prompt": "ai for cs teams under 50 people",
+      "sources": [
+        {
+          "domain": "reddit.com",
+          "channel": "Community",
+          "share": 8.8
+        },
+        {
+          "domain": "coworker.ai",
+          "channel": "Vendor",
+          "share": 5.1
+        },
+        {
+          "domain": "dock.us",
+          "channel": "Editorial",
+          "share": 3.8
+        }
+      ]
+    },
+    {
+      "prompt": "best ai for screenplay writing",
+      "sources": [
+        {
+          "domain": "laper.ai",
+          "channel": "Vendor",
+          "share": 9.1
+        },
+        {
+          "domain": "sudowrite.com",
+          "channel": "Vendor",
+          "share": 7.1
+        },
+        {
+          "domain": "reddit.com",
+          "channel": "Community",
+          "share": 5.8
+        }
+      ]
+    }
   ]
 }
