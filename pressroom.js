@@ -1,4 +1,4 @@
-{
+window.PRESSROOM_DATA = {
   "generated": "2026-06-06T15:42:54.621Z",
   "window": {
     "start": "2026-05-07",
@@ -1052,4 +1052,4 @@
       }
     ]
   }
-}
+};
