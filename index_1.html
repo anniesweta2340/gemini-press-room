@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Press Room — A Visibility Report on Gemini</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,700;0,6..96,900;1,6..96,400;1,6..96,500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F6EFE2;
+    --cream-deep:#EFE5D3;
+    --paper:#FBF6EC;
+    --crimson:#8E1B2E;
+    --crimson-bright:#A8243B;
+    --ink:#1C1611;
+    --ink-soft:#4A3F35;
+    --gold:#A98A4B;
+    --rule:#C9B79A;
+    --rule-soft:#DCCDB3;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:"Newsreader",Georgia,serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    position:relative;
+    overflow-x:hidden;
+  }
+  /* paper grain */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.04;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 32px}
+
+  /* ---- top bar ---- */
+  .topbar{border-top:3px solid var(--crimson);border-bottom:1px solid var(--rule);
+    font-family:"Archivo",sans-serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--ink-soft);padding:10px 0;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  .topbar b{color:var(--crimson);font-weight:700}
+
+  /* ---- masthead ---- */
+  .masthead{text-align:center;padding:54px 0 30px;border-bottom:1px solid var(--rule)}
+  .masthead .kicker{font-family:"Archivo",sans-serif;font-size:12px;letter-spacing:.42em;
+    text-transform:uppercase;color:var(--crimson);margin-bottom:18px}
+  .masthead h1{font-family:"Bodoni Moda",serif;font-weight:900;letter-spacing:-.01em;
+    font-size:clamp(48px,9vw,108px);line-height:.92;color:var(--ink)}
+  .masthead h1 em{font-style:italic;color:var(--crimson);font-weight:500}
+  .masthead .dek{font-style:italic;font-size:clamp(16px,2vw,21px);color:var(--ink-soft);
+    margin-top:20px;max-width:620px;margin-left:auto;margin-right:auto;font-weight:300}
+  .rule-fancy{display:flex;align-items:center;justify-content:center;gap:14px;margin:22px auto 0;max-width:340px}
+  .rule-fancy::before,.rule-fancy::after{content:"";height:1px;background:var(--rule);flex:1}
+  .rule-fancy span{font-family:"Archivo",sans-serif;font-size:10px;letter-spacing:.3em;color:var(--ink-soft);text-transform:uppercase}
+
+  /* ---- cover story ---- */
+  .cover{padding:48px 0 10px;display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:start}
+  @media(max-width:780px){.cover{grid-template-columns:1fr;gap:28px}}
+  .cover .kicker{font-family:"Archivo",sans-serif;font-size:11px;letter-spacing:.34em;
+    text-transform:uppercase;color:var(--crimson);font-weight:700;margin-bottom:12px}
+  .cover h2{font-family:"Bodoni Moda",serif;font-weight:700;font-size:clamp(34px,5vw,56px);
+    line-height:1.02;letter-spacing:-.01em;margin-bottom:20px}
+  .cover .lede{font-size:19px;color:var(--ink);line-height:1.6}
+  .cover .lede::first-letter{font-family:"Bodoni Moda",serif;float:left;font-size:74px;line-height:.72;
+    padding:8px 12px 0 0;color:var(--crimson);font-weight:700}
+  .cover .lede p{margin-bottom:14px}
+
+  /* stat tombstones */
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule-soft);
+    border:1px solid var(--rule-soft)}
+  .stat{background:var(--paper);padding:22px 20px;text-align:left}
+  .stat .lab{font-family:"Archivo",sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--ink-soft);margin-bottom:8px}
+  .stat .val{font-family:"Bodoni Moda",serif;font-size:46px;line-height:1;font-weight:700}
+  .stat .sub{font-family:"Archivo",sans-serif;font-size:11px;color:var(--ink-soft);margin-top:6px;letter-spacing:.02em}
+  .stat.flag{background:#F3E2DF}
+  .stat.flag .val{color:var(--crimson)}
+  .stat.flag .lab{color:var(--crimson);font-weight:700}
+  .stat .flagtag{display:inline-block;font-family:"Archivo",sans-serif;font-size:9px;letter-spacing:.18em;
+    text-transform:uppercase;background:var(--crimson);color:#fff;padding:2px 7px;margin-top:8px;border-radius:1px}
+
+  /* ---- section heads ---- */
+  section{padding:46px 0;border-top:1px solid var(--rule)}
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:26px}
+  .sec-head h3{font-family:"Bodoni Moda",serif;font-size:clamp(26px,3.4vw,38px);font-weight:700;letter-spacing:-.01em}
+  .sec-head .note{font-family:"Archivo",sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft)}
+
+  /* ---- standings table ---- */
+  .standings{width:100%;border-collapse:collapse}
+  .standings th{font-family:"Archivo",sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--ink-soft);text-align:right;padding:0 10px 12px;border-bottom:2px solid var(--ink)}
+  .standings th:first-child,.standings th:nth-child(2){text-align:left}
+  .standings td{padding:15px 10px;border-bottom:1px solid var(--rule-soft);font-size:17px;text-align:right;vertical-align:middle}
+  .standings td:first-child{text-align:left;font-family:"Bodoni Moda",serif;font-size:22px;font-weight:500;color:var(--ink-soft);width:48px}
+  .standings td:nth-child(2){text-align:left;font-family:"Bodoni Moda",serif;font-size:21px;font-weight:500}
+  .standings .num{font-family:"Archivo",sans-serif;font-variant-numeric:tabular-nums;font-weight:500}
+  .standings tr.hero td{background:#F3E2DF}
+  .standings tr.hero td:first-child,.standings tr.hero td:nth-child(2){color:var(--crimson);font-weight:700}
+  .standings tr.hero .pos{color:var(--crimson);font-weight:700}
+  .bar{display:inline-block;height:7px;background:var(--crimson);vertical-align:middle;border-radius:1px;margin-right:8px}
+  .bar.soft{background:var(--rule)}
+
+  /* ---- clippings (worst prompts) ---- */
+  .clip-intro{font-style:italic;color:var(--ink-soft);max-width:680px;margin-bottom:28px;font-size:18px}
+  .clips{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule-soft);border:1px solid var(--rule-soft)}
+  @media(max-width:680px){.clips{grid-template-columns:1fr}}
+  .clip{background:var(--paper);padding:24px 22px;position:relative}
+  .clip .q{font-family:"Bodoni Moda",serif;font-size:22px;line-height:1.12;font-weight:500;margin-bottom:14px;text-transform:lowercase}
+  .clip .q::first-letter{text-transform:uppercase}
+  .clip .meta{display:flex;gap:18px;align-items:baseline;font-family:"Archivo",sans-serif}
+  .clip .pos{font-size:13px;letter-spacing:.04em}
+  .clip .pos b{font-family:"Bodoni Moda",serif;font-size:30px;color:var(--crimson);font-weight:700;margin-right:4px}
+  .clip .men{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+  .clip .ord{position:absolute;top:18px;right:20px;font-family:"Bodoni Moda",serif;font-size:14px;font-style:italic;color:var(--rule)}
+
+  /* ---- sources (the press) ---- */
+  .source{display:grid;grid-template-columns:30px 1.3fr 3fr auto;gap:14px;align-items:center;
+    padding:13px 0;border-bottom:1px solid var(--rule-soft)}
+  .source .rk{font-family:"Bodoni Moda",serif;font-style:italic;color:var(--rule);font-size:15px;text-align:center}
+  .source .dom{font-family:"Archivo",sans-serif;font-weight:600;font-size:15px}
+  .source .track{height:9px;background:var(--cream-deep);border-radius:1px;overflow:hidden}
+  .source .fill{height:100%;background:var(--crimson)}
+  .source .pct{font-family:"Archivo",sans-serif;font-variant-numeric:tabular-nums;font-size:14px;color:var(--ink-soft);text-align:right;min-width:54px}
+  .source.flagged .dom{color:var(--crimson)}
+  .source.flagged .fill{background:var(--crimson-bright)}
+  .press-note{font-style:italic;color:var(--ink-soft);margin-top:22px;font-size:16px;border-left:2px solid var(--crimson);padding-left:16px}
+
+  /* ---- press kit (drafted fixes) ---- */
+  .kit-empty{background:var(--paper);border:1px dashed var(--rule);padding:40px;text-align:center;
+    font-style:italic;color:var(--ink-soft);font-size:17px}
+  .kit-empty b{font-style:normal;color:var(--crimson);font-family:"Archivo",sans-serif;font-size:11px;
+    letter-spacing:.2em;text-transform:uppercase;display:block;margin-bottom:8px}
+  .fix{background:var(--paper);border:1px solid var(--rule-soft);padding:24px;margin-bottom:16px}
+  .fix .for{font-family:"Archivo",sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--crimson);font-weight:700;margin-bottom:6px}
+  .fix .for span{color:var(--ink-soft);font-weight:400}
+  .fix .draft{font-size:17px;line-height:1.55}
+
+  /* ---- footer ---- */
+  footer{border-top:3px solid var(--crimson);margin-top:30px;padding:30px 0 70px;text-align:center}
+  footer .mark{font-family:"Bodoni Moda",serif;font-style:italic;font-size:22px;margin-bottom:8px}
+  footer .meta{font-family:"Archivo",sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft)}
+
+  /* ---- load animation ---- */
+  .reveal{opacity:0;transform:translateY(16px);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards}
+  @keyframes rise{to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar reveal">
+      <div>Visibility Intelligence &nbsp;·&nbsp; <b>Issue 01</b></div>
+      <div id="topdate">The Assistant Category</div>
+      <div>Powered by <b>Profound</b></div>
+    </div>
+
+    <header class="masthead reveal" style="animation-delay:.05s">
+      <div class="kicker">The AI Answer-Engine Review</div>
+      <h1>The Press <em>Room</em></h1>
+      <p class="dek">A standing report on how the world&rsquo;s answer engines cover the AI-assistant category &mdash; and where <strong>Gemini</strong> lands in the story.</p>
+      <div class="rule-fancy"><span id="window-label">Reporting Window</span></div>
+    </header>
+
+    <div class="cover">
+      <div class="reveal" style="animation-delay:.1s">
+        <div class="kicker">Cover Story</div>
+        <h2 id="cover-headline">The Generalist That Loses the Specialists</h2>
+        <div class="lede" id="cover-lede"></div>
+      </div>
+      <div class="reveal" style="animation-delay:.18s">
+        <div class="stats" id="stats"></div>
+      </div>
+    </div>
+
+    <section class="reveal">
+      <div class="sec-head">
+        <h3>The Standings</h3>
+        <div class="note">Share of Voice &middot; Last 30 Days</div>
+      </div>
+      <table class="standings">
+        <thead><tr>
+          <th>#</th><th>Brand</th><th>Share of Voice</th><th>Visibility</th><th>Avg. Position</th><th>Mentions</th>
+        </tr></thead>
+        <tbody id="standings-body"></tbody>
+      </table>
+    </section>
+
+    <section class="reveal">
+      <div class="sec-head">
+        <h3>Where Gemini Loses the Headline</h3>
+        <div class="note">Mentioned &mdash; but buried</div>
+      </div>
+      <p class="clip-intro">Gemini is named in these answers, yet ranked far down the list. Each is a question where a rival is chosen as the authority and Gemini is an afterthought &mdash; the precise gap a marketer can close.</p>
+      <div class="clips" id="clips"></div>
+    </section>
+
+    <section class="reveal">
+      <div class="sec-head">
+        <h3>Who the Press Quotes</h3>
+        <div class="note">Top cited sources</div>
+      </div>
+      <div id="sources"></div>
+      <p class="press-note" id="press-note"></p>
+    </section>
+
+    <section class="reveal">
+      <div class="sec-head">
+        <h3>The Press Kit</h3>
+        <div class="note">Drafted counter-narrative</div>
+      </div>
+      <div id="kit"></div>
+    </section>
+
+    <footer class="reveal">
+      <div class="mark">The Press Room</div>
+      <div class="meta" id="footer-meta">An automated visibility desk</div>
+    </footer>
+  </div>
+
+<script>
+/* ---------- SAMPLE FALLBACK (replaced by your real pressroom.js) ---------- */
+const SAMPLE = {
+  generated: new Date().toISOString(),
+  window: { start: "2026-05-07", end: "2026-06-06" },
+  hero: { brand:"Gemini", sov:5.69, visibility:43.2, avg_position:4.6, mentions:7922 },
+  rank_among_llms: 3,
+  leaderboard: [
+    {brand:"Claude",     sov:7.22, visibility:55.2, avg_position:4.0, mentions:10332},
+    {brand:"Google",     sov:5.86, visibility:43.5, avg_position:3.8, mentions:8238},
+    {brand:"Gemini",     sov:5.69, visibility:43.2, avg_position:4.6, mentions:7922},
+    {brand:"OpenAI",     sov:5.58, visibility:41.9, avg_position:3.5, mentions:8056},
+    {brand:"ChatGPT",    sov:5.22, visibility:40.0, avg_position:4.0, mentions:7614},
+    {brand:"Anthropic",  sov:4.57, visibility:35.4, avg_position:4.0, mentions:6756},
+    {brand:"Microsoft",  sov:2.26, visibility:16.7, avg_position:4.7, mentions:3204},
+    {brand:"Grok",       sov:1.23, visibility:11.1, avg_position:5.5, mentions:1273},
+    {brand:"DeepSeek",   sov:0.90, visibility:6.9,  avg_position:4.7, mentions:1376},
+    {brand:"Perplexity", sov:0.90, visibility:6.7,  avg_position:4.3, mentions:1265}
+  ],
+  gemini_worst_prompts: [
+    {prompt:"what ai are customer service teams using", avg_position:13.5, mentions:5,  visibility:3.2},
+    {prompt:"ai for medical translation",              avg_position:12.2, mentions:6,  visibility:3.9},
+    {prompt:"ai for cs teams under 50 people",          avg_position:12.1, mentions:13, visibility:8.4},
+    {prompt:"ai for grad school research",              avg_position:11.0, mentions:19, visibility:12.3},
+    {prompt:"best ai for screenplay writing",           avg_position:10.5, mentions:14, visibility:9.0}
+  ],
+  top_sources: [
+    {domain:"reddit.com", share:10.01, count:24753},
+    {domain:"g2.com", share:3.2, count:7900},
+    {domain:"github.com", share:2.8, count:6800},
+    {domain:"medium.com", share:2.1, count:5200},
+    {domain:"youtube.com", share:1.9, count:4700}
+  ],
+  fixes: []
+};
+
+const DATA = (window.PRESSROOM_DATA) ? window.PRESSROOM_DATA : SAMPLE;
+
+/* ---------- render ---------- */
+const fmt = n => (n==null?"—":Number(n).toLocaleString());
+const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function pretty(d){ if(!d) return ""; const x=new Date(d); return months[x.getMonth()]+" "+x.getDate(); }
+
+// window label
+if(DATA.window){
+  document.getElementById("window-label").textContent =
+    pretty(DATA.window.start)+" — "+pretty(DATA.window.end)+", 2026";
+}
+
+// cover lede (data-driven)
+const h = DATA.hero || {};
+const rank = DATA.rank_among_llms || "—";
+const ordinal = {1:"first",2:"second",3:"third",4:"fourth",5:"fifth"}[rank] || (rank+"th");
+document.getElementById("cover-lede").innerHTML =
+  `<p>By raw presence, Gemini is a front-runner — <b>${ordinal} among AI assistants</b> with ${h.visibility}% visibility and ${fmt(h.mentions)} mentions across the category. It is, by any measure, in the room.</p>`+
+  `<p>But presence is not position. Gemini&rsquo;s average rank of <b style="color:var(--crimson)">${h.avg_position}</b> is the weakest of the leaders — and the moment a question turns specialized, it slides to the bottom of the page. Gemini wins the category and loses the verticals.</p>`;
+
+// stats
+const stats = [
+  {lab:"Rank Among Assistants", val:"№ "+rank, sub:"by share of voice"},
+  {lab:"Share of Voice", val:h.sov+"%", sub:"of all category mentions"},
+  {lab:"Visibility", val:h.visibility+"%", sub:"of answers mention Gemini"},
+  {lab:"Average Position", val:h.avg_position, sub:"where it lands in the list", flag:true, tag:"Weakest of the leaders"}
+];
+document.getElementById("stats").innerHTML = stats.map(s=>`
+  <div class="stat ${s.flag?'flag':''}">
+    <div class="lab">${s.lab}</div>
+    <div class="val">${s.val}</div>
+    <div class="sub">${s.sub}</div>
+    ${s.tag?`<span class="flagtag">${s.tag}</span>`:''}
+  </div>`).join("");
+
+// standings
+const maxSov = Math.max(...DATA.leaderboard.map(b=>b.sov));
+document.getElementById("standings-body").innerHTML = DATA.leaderboard.map((b,i)=>{
+  const hero = /^gemini$/i.test(b.brand);
+  const w = Math.max(4, (b.sov/maxSov)*120);
+  return `<tr class="${hero?'hero':''}">
+    <td>${i+1}</td>
+    <td>${b.brand}</td>
+    <td><span class="bar ${hero?'':'soft'}" style="width:${w}px"></span><span class="num">${b.sov}%</span></td>
+    <td class="num">${b.visibility}%</td>
+    <td class="num pos">${b.avg_position}</td>
+    <td class="num">${fmt(b.mentions)}</td>
+  </tr>`;
+}).join("");
+
+// clippings
+document.getElementById("clips").innerHTML = (DATA.gemini_worst_prompts||[]).slice(0,8).map((p,i)=>`
+  <div class="clip">
+    <div class="ord">№ ${String(i+1).padStart(2,'0')}</div>
+    <div class="q">&ldquo;${p.prompt}&rdquo;</div>
+    <div class="meta">
+      <div class="pos"><b>${Math.round(p.avg_position)}</b>position in the answer</div>
+      <div class="men">${p.mentions} mentions</div>
+    </div>
+  </div>`).join("");
+
+// sources
+const maxShare = Math.max(...DATA.top_sources.map(s=>s.share));
+document.getElementById("sources").innerHTML = DATA.top_sources.slice(0,12).map((s,i)=>{
+  const flagged = /reddit/i.test(s.domain);
+  return `<div class="source ${flagged?'flagged':''}">
+    <div class="rk">${i+1}</div>
+    <div class="dom">${s.domain}</div>
+    <div class="track"><div class="fill" style="width:${(s.share/maxShare)*100}%"></div></div>
+    <div class="pct">${s.share}%</div>
+  </div>`;
+}).join("");
+const top = DATA.top_sources[0];
+if(top && /reddit/i.test(top.domain)){
+  document.getElementById("press-note").innerHTML =
+    `The single most-quoted source isn&rsquo;t a tech publication — it&rsquo;s <b>Reddit</b>, at ${top.share}% of all citations. To move the answer, you have to move the conversation where the engines actually listen.`;
+}
+
+// press kit
+const fixes = DATA.fixes || [];
+if(fixes.length){
+  document.getElementById("kit").innerHTML = fixes.map(f=>`
+    <div class="fix">
+      <div class="for">Counter for: <span>&ldquo;${f.prompt}&rdquo;</span></div>
+      <div class="draft">${f.draft}</div>
+    </div>`).join("");
+} else {
+  document.getElementById("kit").innerHTML =
+    `<div class="kit-empty"><b>Stage Two</b>For each buried question, the desk drafts the content that would lift Gemini back to the headline — grounded in the sources the engines already trust. Run the diagnosis agent to fill this page.</div>`;
+}
+
+// footer
+document.getElementById("footer-meta").innerHTML =
+  `Generated ${pretty(DATA.generated)||""} · powered by Profound · ${DATA.leaderboard.length} brands · ${fmt(h.mentions)} mentions analyzed`;
+</script>
+</body>
+</html>
