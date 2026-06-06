@@ -184,6 +184,37 @@
     font-size:15px;color:var(--ink-soft)}
   .leaks td.lk-risk{font-family:"Bodoni Moda",serif;font-size:22px;font-weight:700;color:var(--crimson)}
 
+  /* ---- influence desk ---- */
+  .infl-playbook{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start;margin-bottom:8px}
+  @media(max-width:780px){.infl-playbook{grid-template-columns:1fr;gap:20px}}
+  .infl-lede{font-size:18px;line-height:1.6;color:var(--ink)}
+  .infl-lede .big{font-family:"Bodoni Moda",serif;font-size:40px;font-weight:700;color:var(--crimson);display:block;line-height:1;margin-bottom:8px}
+  .chan{display:grid;grid-template-columns:1.4fr 3fr auto;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--rule-soft)}
+  .chan .nm{font-family:"Archivo",sans-serif;font-size:13px;font-weight:600}
+  .chan .tk{height:8px;background:var(--cream-deep);border-radius:1px;overflow:hidden}
+  .chan .fl{height:100%;background:var(--crimson)}
+  .chan .pc{font-family:"Archivo",sans-serif;font-variant-numeric:tabular-nums;font-size:13px;color:var(--ink-soft);text-align:right;min-width:42px}
+  .chan.earned .nm{color:var(--crimson)}
+  .infl-subhead{font-family:"Bodoni Moda",serif;font-size:clamp(22px,2.6vw,30px);font-weight:700;
+    letter-spacing:-.01em;margin:40px 0 8px}
+  .infl-note{font-style:italic;color:var(--ink-soft);font-size:16px;max-width:680px;margin-bottom:20px;line-height:1.55}
+  .bcom{display:grid;grid-template-columns:1.2fr 3fr auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--rule-soft)}
+  .bcom .bn{font-family:"Bodoni Moda",serif;font-size:21px;font-weight:500}
+  .bcom .tk{height:11px;background:var(--cream-deep);border-radius:1px;overflow:hidden}
+  .bcom .fl{height:100%;background:var(--rule)}
+  .bcom .pc{font-family:"Archivo",sans-serif;font-variant-numeric:tabular-nums;font-size:16px;color:var(--ink-soft);text-align:right;min-width:56px}
+  .bcom.lead .bn{color:var(--crimson);font-weight:700}
+  .bcom.lead .fl{background:var(--crimson)}
+  .bcom.you .bn{font-style:italic}
+  .desk-card{background:var(--paper);border:1px solid var(--rule-soft);padding:20px 22px;margin-bottom:12px;
+    display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center}
+  @media(max-width:680px){.desk-card{grid-template-columns:1fr;gap:10px}}
+  .desk-card .dq{font-family:"Bodoni Moda",serif;font-size:19px;font-weight:500}
+  .desk-card .dsrc{font-family:"Archivo",sans-serif;font-size:12px;color:var(--ink-soft);margin-top:5px;letter-spacing:.02em}
+  .desk-card .rec{text-align:right}
+  .desk-card .rec .lab{font-family:"Archivo",sans-serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft)}
+  .desk-card .rec .ch{font-family:"Bodoni Moda",serif;font-size:18px;font-weight:700;color:var(--crimson);margin-top:3px}
+
   /* ---- load animation ---- */
   .reveal{opacity:0;transform:translateY(16px);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards}
   @keyframes rise{to{opacity:1;transform:none}}
@@ -274,6 +305,27 @@
 
     <section class="reveal">
       <div class="sec-head">
+        <h3>The Influence Desk</h3>
+        <div class="note">Where the narrative is made</div>
+      </div>
+      <p class="clip-intro">You cannot buy your way into an AI answer — you have to be <em>talked about</em> where the engines listen. The brands that win are the ones whose communities flood those surfaces.</p>
+
+      <div class="infl-playbook">
+        <div class="infl-lede" id="infl-lede"></div>
+        <div id="channel-mix"></div>
+      </div>
+
+      <h4 class="infl-subhead">The Ambassador Fingerprint</h4>
+      <p class="infl-note" id="infl-fingerprint"></p>
+      <div id="brand-community"></div>
+
+      <h4 class="infl-subhead">The Deployment Map</h4>
+      <p class="infl-note">For each buried question, the channel where rivals already win — and where Gemini should send its creators.</p>
+      <div id="infl-desk"></div>
+    </section>
+
+    <section class="reveal">
+      <div class="sec-head">
         <h3>The Press Kit</h3>
         <div class="note">Drafted counter-narrative</div>
       </div>
@@ -319,6 +371,29 @@ const SAMPLE = {
     {domain:"medium.com", share:2.1, count:5200},
     {domain:"youtube.com", share:1.9, count:4700}
   ],
+  influence: {
+    channel_mix: [
+      {channel:"News/Editorial", share:64.4},
+      {channel:"Community (Reddit/HN/Quora)", share:14.2},
+      {channel:"Creators (YouTube/TikTok)", share:7.9},
+      {channel:"Owned/Vendor", share:5.2},
+      {channel:"Writers (blogs/Medium)", share:4.1},
+      {channel:"Social (LinkedIn/X)", share:2.8},
+      {channel:"Review platforms", share:0.7},
+      {channel:"Developer (GitHub/HF)", share:0.5}
+    ],
+    brand_community_share: [
+      {brand:"Claude", community_share:53.5},
+      {brand:"Gemini", community_share:48.5},
+      {brand:"ChatGPT", community_share:45.8}
+    ],
+    desk: [
+      {prompt:"ai for grad school research", recommended_channel:"Community (Reddit)", top_sources:[{domain:"reddit.com"},{domain:"youtube.com"}]},
+      {prompt:"best ai for screenplay writing", recommended_channel:"Creators (YouTube)", top_sources:[{domain:"youtube.com"},{domain:"reddit.com"}]},
+      {prompt:"ai for cs teams under 50 people", recommended_channel:"Review platforms", top_sources:[{domain:"g2.com"},{domain:"reddit.com"}]},
+      {prompt:"most private ai chatbot", recommended_channel:"Community (Reddit)", top_sources:[{domain:"reddit.com"}]}
+    ]
+  },
   fixes: [],
   revenue: {
     total_at_risk: 185.60,
@@ -414,6 +489,70 @@ if(topSource && /reddit/i.test(topSource.domain)){
   document.getElementById("press-note").innerHTML =
     `The single most-quoted source isn&rsquo;t a tech publication — it&rsquo;s <b>Reddit</b>, at ${topSource.share}% of all citations. To move the answer, you have to move the conversation where the engines actually listen.`;
 }
+
+// influence desk
+(function(){
+  const inf = DATA.influence;
+  if(!inf){ return; }
+  const earned = /Community|Creators|Writers|Social|Review/;
+
+  // playbook lede + channel mix
+  const mix = inf.channel_mix || [];
+  const earnedTotal = mix.filter(c=>earned.test(c.channel)).reduce((s,c)=>s+c.share,0);
+  const ledeEl = document.getElementById('infl-lede');
+  if(ledeEl){
+    ledeEl.innerHTML = `<span class="big">${earnedTotal.toFixed(0)}%</span>`+
+      `of brand mentions are carried by community, creator, and earned surfaces — not by paid media or owned pages. In AI answers, being recommended is a function of being <em>discussed</em>.`;
+  }
+  const maxC = Math.max(...mix.map(c=>c.share));
+  const cm = document.getElementById('channel-mix');
+  if(cm){
+    cm.innerHTML = mix.map(c=>`
+      <div class="chan ${earned.test(c.channel)?'earned':''}">
+        <div class="nm">${c.channel}</div>
+        <div class="tk"><div class="fl" style="width:${(c.share/maxC)*100}%"></div></div>
+        <div class="pc">${c.share}%</div>
+      </div>`).join('');
+  }
+
+  // brand community share (ambassador fingerprint)
+  const bc = inf.brand_community_share || [];
+  const fp = document.getElementById('infl-fingerprint');
+  const claude = bc.find(b=>/claude/i.test(b.brand));
+  const gem = bc.find(b=>/gemini/i.test(b.brand));
+  if(fp && claude && gem){
+    fp.innerHTML = `Ambassador and creator activity never appears as a citation itself — it shows up as <em>community-carried mentions</em>. Claude&rsquo;s mentions are the most community-driven of the field (${claude.community_share}% vs Gemini&rsquo;s ${gem.community_share}%) — the measurable signature of a community program rivals haven&rsquo;t matched.`;
+  }
+  const maxB = Math.max(...bc.map(b=>b.community_share));
+  const bcEl = document.getElementById('brand-community');
+  if(bcEl){
+    bcEl.innerHTML = bc.map((b,i)=>`
+      <div class="bcom ${i===0?'lead':''} ${/gemini/i.test(b.brand)?'you':''}">
+        <div class="bn">${b.brand}</div>
+        <div class="tk"><div class="fl" style="width:${(b.community_share/maxB)*100}%"></div></div>
+        <div class="pc">${b.community_share}%</div>
+      </div>`).join('');
+  }
+
+  // deployment map
+  const desk = inf.desk || [];
+  const de = document.getElementById('infl-desk');
+  if(de){
+    de.innerHTML = desk.map(d=>{
+      const srcs = (d.top_sources||[]).map(s=>s.domain).slice(0,3).join(' · ');
+      return `<div class="desk-card">
+        <div>
+          <div class="dq">&ldquo;${d.prompt}&rdquo;</div>
+          <div class="dsrc">Winning sources: ${srcs || '—'}</div>
+        </div>
+        <div class="rec">
+          <div class="lab">Deploy on</div>
+          <div class="ch">${d.recommended_channel}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+})();
 
 // press kit
 const fixes = DATA.fixes || [];
