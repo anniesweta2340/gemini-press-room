@@ -11,6 +11,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.102.0",
     "@profoundai/client": "^0.46.0"
   }
 }

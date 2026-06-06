@@ -190,6 +190,7 @@
 </style>
 </head>
 <body>
+<script src="pressroom.js"></script>
   <div class="wrap">
     <div class="topbar reveal">
       <div>Visibility Intelligence &nbsp;·&nbsp; <b>Issue 01</b></div>
@@ -408,10 +409,10 @@ document.getElementById("sources").innerHTML = DATA.top_sources.slice(0,12).map(
     <div class="pct">${s.share}%</div>
   </div>`;
 }).join("");
-const top = DATA.top_sources[0];
-if(top && /reddit/i.test(top.domain)){
+const topSource = DATA.top_sources[0];
+if(topSource && /reddit/i.test(topSource.domain)){
   document.getElementById("press-note").innerHTML =
-    `The single most-quoted source isn&rsquo;t a tech publication — it&rsquo;s <b>Reddit</b>, at ${top.share}% of all citations. To move the answer, you have to move the conversation where the engines actually listen.`;
+    `The single most-quoted source isn&rsquo;t a tech publication — it&rsquo;s <b>Reddit</b>, at ${topSource.share}% of all citations. To move the answer, you have to move the conversation where the engines actually listen.`;
 }
 
 // press kit

@@ -1051,5 +1051,35 @@ window.PRESSROOM_DATA = {
         "total_citations": 17242
       }
     ]
-  }
+  },
+  "fixes": [
+    {
+      "prompt": "most private ai chatbot",
+      "root_cause": "Gemini lacks credible, community-validated privacy-focused content that directly addresses data handling, on-device processing, and zero-retention policies in the way that trusted privacy-advocacy and peer-review sources like privacyguides.org and Reddit threads do, leaving it absent from the citation pool LLMs draw on for privacy-sensitive AI recommendations.",
+      "recommended_channel": "comparison",
+      "draft": "Create a detailed, auditable comparison page documenting Gemini's privacy architecture—covering data retention timelines, end-to-end encryption practices, on-device vs. cloud processing distinctions, and third-party data-sharing policies—written in the factual, citation-friendly style that privacy-advocacy communities like privacyguides.org and technical Reddit communities expect. Structure the content around verifiable claims (linking directly to Google's data policies, third-party audits, and transparency reports) so it can serve as a primary source for community members researching 'most private AI chatbot' and editors compiling privacy tool guides. Prioritize a no-marketing tone with a scannable comparison format—tables, policy summaries, and clear disclosure of what Gemini does and does not retain—since that editorial rigor is what earns citations and trust from privacy-focused audiences rather than promotional framing.",
+      "confidence": 0.85
+    },
+    {
+      "prompt": "ai for ocr on receipts and invoices",
+      "root_cause": "Gemini lacks purpose-built, query-matched content that directly addresses receipt and invoice OCR use cases with concrete tool comparisons, accuracy benchmarks, and real-world workflow context — the signals that specialist sources like koncile.ai and klippa.com consistently provide and that LLMs preferentially cite.",
+      "recommended_channel": "comparison",
+      "draft": "Create a structured comparison guide targeting the query 'ai for ocr on receipts and invoices' that covers accuracy benchmarks, supported document formats, API integration complexity, and pricing tiers for AI OCR solutions — with Gemini's Document AI capabilities featured prominently alongside concrete, verifiable specs such as field extraction accuracy rates, supported languages, and processing speed. The content should match the editorial depth that finance-tech and document-automation audiences expect from specialist sources like koncile.ai and klippa.com, which typically publish practitioner-focused guides on OCR tooling for AP workflows, expense management, and ERP integrations. Include a real-world workflow section showing how Gemini handles unstructured receipt and invoice data end-to-end, with citable specifics (e.g., supported file types, confidence scoring, and API call structure) that give those domains a reason to reference or link to Gemini as a credible, data-backed source in this space.",
+      "confidence": 0.92
+    },
+    {
+      "prompt": "ai for grad school research",
+      "root_cause": "Gemini lacks discoverable, peer-validated content in the academic and student-community ecosystems (Reddit threads, university library guides, YouTube tutorials) where grad students actually seek tool recommendations, leaving it absent from the trust signals LLMs weight most for this query.",
+      "recommended_channel": "use-case",
+      "draft": "Create a detailed 'Gemini for Grad School Research' use-case guide structured around the specific workflow stages PhD and master's students navigate—systematic literature synthesis, methodology section drafting, and source organization—written at a depth and rigor that university library guides (like those on uw.edu) would consider credible enough to reference or link alongside their research tool roundups. Simultaneously, seed authentic, experience-grounded posts in graduate-focused subreddits (r/GradSchool, r/AskAcademia, r/PhD) where students actively crowdsource tool recommendations, ensuring Gemini's capabilities for handling long-context academic documents and multimodal research inputs are demonstrated through concrete, workflow-specific examples rather than general claims. The combination of a citable, library-adjacent resource and community-validated discussion threads directly targets the trust-signal ecosystem where LLMs draw authority when answering 'ai for grad school research.'",
+      "confidence": 0.95
+    },
+    {
+      "prompt": "ai for cs teams under 50 people",
+      "root_cause": "Gemini lacks practitioner-level, small-team-specific content that matches the conversational, experience-driven format LLMs pull from community and niche tool sources like Reddit and coworker.ai when answering SMB CS team queries.",
+      "recommended_channel": "comparison",
+      "draft": "Create a practitioner-written comparison piece targeting CS teams under 50 people that walks through how Gemini fits into real small-team workflows — think triage automation, ticket summarization, and async handoff notes — with honest per-seat pricing context and specific use cases for teams without dedicated ops or AI resources. The content should read like something a CS lead would share in a Slack community or subreddit: specific, experience-grounded, and sized for the actual constraints of a lean team rather than an enterprise rollout. Format it as a structured but conversational guide that mirrors the editorial style community and practitioner-focused platforms favor — concrete scenarios over feature lists, and clear answers to 'would this work for a team our size' questions.",
+      "confidence": 0.92
+    }
+  ]
 };
