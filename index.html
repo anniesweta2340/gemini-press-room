@@ -710,6 +710,13 @@ window.kpLiveRefresh = async function(){
     }).join('');
     note.className='kp-note cmd';
     note.textContent='✓ Live from Profound — '+d.info.total_rows.toLocaleString()+' citation rows, refreshed just now.';
+    // live-date-update: reflect the refresh time in the masthead window label
+    try {
+      const now = new Date();
+      const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const wl = document.getElementById('window-label');
+      if(wl) wl.textContent = 'Refreshed live · ' + mo[now.getMonth()] + ' ' + now.getDate() + ', ' + now.getFullYear();
+    } catch(e){}
   } catch(e){
     note.className='kp-note'; note.textContent='Live call failed: '+e.message;
   }
