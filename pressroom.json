@@ -74,7 +74,7 @@
       "sov": 0.9,
       "visibility": 6.9,
       "avg_position": 4.7,
-      "mentions": 1376
+      "mentions": 1377
     },
     {
       "brand": "Perplexity",
@@ -103,13 +103,6 @@
       "visibility": 0.5,
       "avg_position": 6.7,
       "mentions": 79
-    },
-    {
-      "brand": "Deepseek",
-      "sov": 0,
-      "visibility": 0,
-      "avg_position": 8,
-      "mentions": 1
     }
   ],
   "gemini_worst_prompts": [
