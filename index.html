@@ -131,11 +131,20 @@
   .press-note{font-style:italic;color:var(--ink-soft);margin-top:22px;font-size:16px;border-left:2px solid var(--crimson);padding-left:16px}
 
   /* ---- press kit (drafted fixes) ---- */
+  .kit-panel{background:#1C1611;margin:0 -32px;padding:46px 32px 60px;border-top:none}
+  .kit-panel .sec-head h3{color:var(--cream)}
+  .kit-panel .sec-head .note{color:var(--rule)}
+  .kit-panel .clip-intro{color:var(--rule)}
+  .kit-panel .fix{border-bottom-color:rgba(255,255,255,0.1)}
+  .kit-panel .fix .for{color:var(--crimson-bright)}
+  .kit-panel .fix .for span{color:var(--rule)}
+  .kit-panel .fix .draft{color:var(--cream)}
+  .kit-panel .fix-sources-label{color:var(--rule)}
   .kit-empty{background:var(--paper);border:1px dashed var(--rule);padding:40px;text-align:center;
     font-style:italic;color:var(--ink-soft);font-size:17px}
   .kit-empty b{font-style:normal;color:var(--crimson);font-family:"Archivo",sans-serif;font-size:11px;
     letter-spacing:.2em;text-transform:uppercase;display:block;margin-bottom:8px}
-  .fix{background:var(--paper);border:1px solid var(--rule-soft);padding:24px;margin-bottom:16px}
+  .fix{background:transparent;border:none;border-bottom:1px solid var(--rule-soft);padding:24px 0;margin-bottom:0}
   .fix .for{font-family:"Archivo",sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--crimson);font-weight:700;margin-bottom:6px}
   .fix .for span{color:var(--ink-soft);font-weight:400}
   .fix .draft{font-size:17px;line-height:1.55}
@@ -336,7 +345,7 @@
       <div class="rev-chain" id="rev-chain"></div>
       <details class="methodology">
         <summary>Methodology</summary>
-        <p class="method-body">For each prompt, we start with the trailing 30 days of demand (mentions), then apply an &lsquo;inclusion gap&rsquo; &mdash; a measure of how far Gemini sits below a competitive top-3 position, capped at 10 spots down. That gap is scaled to reflect how much visibility is actually being lost: a brand buried at position 13 loses more potential consideration than one sitting at position 4. From there, we apply two conversion assumptions: that 15% of users who&rsquo;d see a better-ranked competitor would consider switching, and 3% of those would actually convert &mdash; multiplied by annual contract value per seat. The result is the annualized revenue exposure represented by one month of lost visibility &mdash; a directional estimate for prioritizing which gaps matter most, not a precise forecast.</p>
+        <p class="method-body">For each prompt, we start with the trailing 30 days of demand (mentions), then apply an &lsquo;inclusion gap&rsquo; &mdash; a measure of how far Gemini sits below a competitive top-3 position, capped at 10 spots down. That gap is scaled to reflect how much visibility is actually being lost: a brand buried at position 13 loses more potential consideration than one sitting at position 4. From there, we apply two conversion assumptions: that 15% of users who&rsquo;d see a better-ranked competitor would consider switching, and 3% of those would actually convert &mdash; multiplied by annual contract value per seat. This uses an assumed annual contract value of $240 per seat for Gemini &mdash; an estimate, not a disclosed or confirmed figure. The result is the annualized revenue exposure represented by one month of lost visibility &mdash; a directional estimate for prioritizing which gaps matter most, not a precise forecast.</p>
       </details>
       <div class="rev-table-head"><h4>The Leaks No One Looks For</h4></div>
       <p class="rev-framing">Each is too small for a human to chase. Together, across every buried question, they are the cost of losing the verticals.</p>
@@ -399,7 +408,7 @@
 
     </section>
 
-    <section class="reveal">
+    <section class="reveal kit-panel">
       <div class="sec-head">
         <h3>The Press Kit</h3>
         <div class="note">Drafted counter-narrative</div>
@@ -643,7 +652,7 @@ if(fixes.length){
         <div class="out-src">
           <span class="od">${s.domain}</span>
           <span class="oc ${s.channel}">${s.channel}</span>
-          <span class="osh">${s.share}%</span>
+          <span class="osh">${s.share}% of citations</span>
         </div>`).join('')}
       </div></div>` : '';
     return `<div class="fix">
