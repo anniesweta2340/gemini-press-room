@@ -700,8 +700,8 @@ window.kpLiveRefresh = async function(){
   const note = document.getElementById('kp-note');
   if(!key){ note.className='kp-note'; note.textContent='Paste your Profound API key first.'; return; }
 
-  const end = new Date().toISOString().slice(0,10);
-  const start = new Date(Date.now() - 30*864e5).toISOString().slice(0,10);
+  const end = new Date(Date.now() - 864e5).toISOString().slice(0,10);   // yesterday — API requires before today
+  const start = new Date(Date.now() - 31*864e5).toISOString().slice(0,10);
   const CATEGORY_ID = '7943f355-67f3-4792-b172-981db56ef33c';
   const hdrs = { 'Content-Type':'application/json', 'X-API-Key': key };
   const pfetch = async (label, path, body) => {
