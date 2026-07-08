@@ -82,6 +82,7 @@
   .stat.flag .lab{color:var(--crimson);font-weight:700}
   .stat .flagtag{display:inline-block;font-family:"Archivo",sans-serif;font-size:9px;letter-spacing:.18em;
     text-transform:uppercase;background:var(--crimson);color:#fff;padding:2px 7px;margin-top:8px;border-radius:1px}
+  .stat .stat-note{font-family:"Archivo",sans-serif;font-size:9px;color:var(--ink-soft);margin-top:5px;line-height:1.4;letter-spacing:.01em}
 
   /* ---- section heads ---- */
   section{padding:46px 0;border-top:1px solid var(--rule)}
@@ -503,7 +504,7 @@ const stats = [
   {lab:"Rank Among Assistants", val:"№ "+rank, sub:"by share of voice"},
   {lab:"Share of Voice", val:h.sov+"%", sub:"of all category mentions"},
   {lab:"Visibility", val:h.visibility+"%", sub:"of answers mention Gemini"},
-  {lab:"Average Position", val:h.avg_position, sub:"where it lands in the list", flag:true, tag:"Weakest of the leaders"}
+  {lab:"Average Position", val:h.avg_position, sub:"where it lands in the list", flag:true, tag:"Weakest Avg. Position Among Top 5", note:"(Claude, Google, Gemini, OpenAI, ChatGPT — ranked by share of voice)"}
 ];
 document.getElementById("stats").innerHTML = stats.map(s=>`
   <div class="stat ${s.flag?'flag':''}">
@@ -511,6 +512,7 @@ document.getElementById("stats").innerHTML = stats.map(s=>`
     <div class="val">${s.val}</div>
     <div class="sub">${s.sub}</div>
     ${s.tag?`<span class="flagtag">${s.tag}</span>`:''}
+    ${s.note?`<div class="stat-note">${s.note}</div>`:''}
   </div>`).join("");
 
 // standings
@@ -788,8 +790,8 @@ window.kpLiveRefresh = async function(){
       {lab:'Rank Among Assistants', val:'№ '+gemRank, sub:'by share of voice'},
       {lab:'Share of Voice', val:gemini.sov+'%', sub:'of all category mentions'},
       {lab:'Visibility', val:gemini.visibility+'%', sub:'of answers mention Gemini'},
-      {lab:'Average Position', val:gemini.avg_position, sub:'where it lands in the list', flag:true, tag:'Weakest of the leaders'}
-    ].map(s=>`<div class="stat ${s.flag?'flag':''}"><div class="lab">${s.lab}</div><div class="val">${s.val}</div><div class="sub">${s.sub}</div>${s.tag?`<span class="flagtag">${s.tag}</span>`:''}</div>`).join('');
+      {lab:'Average Position', val:gemini.avg_position, sub:'where it lands in the list', flag:true, tag:'Weakest Avg. Position Among Top 5', note:'(Claude, Google, Gemini, OpenAI, ChatGPT — ranked by share of voice)'}
+    ].map(s=>`<div class="stat ${s.flag?'flag':''}"><div class="lab">${s.lab}</div><div class="val">${s.val}</div><div class="sub">${s.sub}</div>${s.tag?`<span class="flagtag">${s.tag}</span>`:''}${s.note?`<div class="stat-note">${s.note}</div>`:''}</div>`).join('');
 
     // --- standings ---
     const maxSov2 = Math.max(...leaderboard.map(b=>b.sov));
