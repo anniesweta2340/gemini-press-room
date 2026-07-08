@@ -331,6 +331,7 @@
         <thead><tr><th>#</th><th>Prompt</th><th>Avg. Position</th><th>At Risk</th></tr></thead>
         <tbody id="leaks-body"></tbody>
       </table>
+      <p id="leaks-note" class="rev-framing" style="margin-top:10px;font-style:italic"></p>
     </div>
 
     <section class="reveal">
@@ -647,13 +648,17 @@ if(fixes.length){
     `$${a.value_per_conversion||'—'}/seat/yr`,
     `multiplier ${a.volume_multiplier||1}×`,
   ].join(' · ');
-  document.getElementById('leaks-body').innerHTML = (rev.by_prompt||[]).slice(0,8).map((p,i)=>`
+  const allPrompts = rev.by_prompt || [];
+  document.getElementById('leaks-body').innerHTML = allPrompts.slice(0,8).map((p,i)=>`
     <tr>
       <td>${i+1}</td>
       <td>&ldquo;${p.prompt}&rdquo;</td>
       <td class="lk-pos">${p.avg_position}</td>
       <td class="lk-risk" data-base="${p.revenue_at_risk}">${fmtMoney(p.revenue_at_risk)}</td>
     </tr>`).join('');
+  const ln = document.getElementById('leaks-note');
+  if(ln && allPrompts.length > 8)
+    ln.textContent = `Showing the top 8 of ${allPrompts.length} qualifying prompts by revenue at risk — the ${fmtMoney(rev.total_at_risk)} total above reflects all ${allPrompts.length}.`;
   window.revToggle = function(mode){
     document.getElementById('rev-btn-sampled').classList.toggle('active', mode==='sampled');
     document.getElementById('rev-btn-volume').classList.toggle('active', mode==='volume');
@@ -759,10 +764,10 @@ window.kpLiveRefresh = async function(){
     const CR=0.15, CVR=0.03, ACV=240, GAP_CAP=10;
     const revenuePrompts = gemPrompts.filter(p=>p.avg_position>3).map(p=>{
       const gap = Math.min(p.avg_position-3, GAP_CAP)/GAP_CAP;
-      const rev = +(p.mentions * gap * CR * CVR * ACV).toFixed(2);
-      return {...p, inclusion_gap:+gap.toFixed(3), revenue_at_risk:rev};
+      const raw = p.mentions * gap * CR * CVR * ACV;  // unrounded for accurate total
+      return {...p, inclusion_gap:+gap.toFixed(3), revenue_at_risk:+raw.toFixed(2), _raw:raw};
     }).sort((a,b)=>b.revenue_at_risk-a.revenue_at_risk);
-    const total_at_risk = +revenuePrompts.reduce((s,p)=>s+p.revenue_at_risk,0).toFixed(2);
+    const total_at_risk = +revenuePrompts.reduce((s,p)=>s+p._raw,0).toFixed(2);  // sum unrounded, round once
 
     // --- Gemini hero ---
     const gemini = leaderboard.find(b=>/^gemini$/i.test(b.brand)) || {};
@@ -823,6 +828,9 @@ window.kpLiveRefresh = async function(){
     document.getElementById('rev-chain').textContent = `consideration ${CR*100}% · conversion ${CVR*100}% · $${ACV}/seat/yr · multiplier 1×`;
     document.getElementById('leaks-body').innerHTML = revenuePrompts.slice(0,8).map((p,i)=>`
       <tr><td>${i+1}</td><td>&ldquo;${p.prompt}&rdquo;</td><td class="lk-pos">${p.avg_position}</td><td class="lk-risk" data-base="${p.revenue_at_risk}">${fmtMoney(p.revenue_at_risk)}</td></tr>`).join('');
+    const lnLive = document.getElementById('leaks-note');
+    if(lnLive && revenuePrompts.length > 8)
+      lnLive.textContent = `Showing the top 8 of ${revenuePrompts.length} qualifying prompts by revenue at risk — the ${fmtMoney(total_at_risk)} total above reflects all ${revenuePrompts.length}.`;
     window.revToggle = function(mode){
       document.getElementById('rev-btn-sampled').classList.toggle('active',mode==='sampled');
       document.getElementById('rev-btn-volume').classList.toggle('active',mode==='volume');

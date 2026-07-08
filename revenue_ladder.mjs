@@ -31,6 +31,7 @@ const pressroom = JSON.parse(fs.readFileSync('pressroom.json', 'utf8'));
 const prompts = pressroom.gemini_worst_prompts ?? [];
 
 // ─── Per-prompt revenue-at-risk ───────────────────────────────────────────────
+let _totalRaw = 0;
 const by_prompt = prompts
   // Only prompts where Gemini sits outside the "recommended" top-3 band.
   .filter(p => p.avg_position > 3)
@@ -48,8 +49,9 @@ const by_prompt = prompts
     // are known to be a sampled subset; it never touches the per-seat price.
     const capturable = demand_weight * VOLUME_MULTIPLIER * inclusion_gap * CONSIDERATION_RATE;
 
-    // Dollar value of that unconverted consideration pool.
-    const revenue_at_risk = capturable * CONVERSION_RATE * VALUE_PER_CONVERSION;
+    // Dollar value of that unconverted consideration pool (unrounded for accurate total).
+    const revenue_at_risk_raw = capturable * CONVERSION_RATE * VALUE_PER_CONVERSION;
+    _totalRaw += revenue_at_risk_raw;
 
     return {
       prompt: p.prompt,
@@ -57,15 +59,13 @@ const by_prompt = prompts
       mentions: p.mentions,
       inclusion_gap: +inclusion_gap.toFixed(3),
       capturable: +capturable.toFixed(2),
-      revenue_at_risk: +revenue_at_risk.toFixed(2),
+      revenue_at_risk: +revenue_at_risk_raw.toFixed(2),
     };
   })
   .sort((a, b) => b.revenue_at_risk - a.revenue_at_risk); // highest risk first
 
-// ─── Roll-up total ─────────────────────────────────────────────────────────────
-const total_at_risk = +by_prompt
-  .reduce((sum, p) => sum + p.revenue_at_risk, 0)
-  .toFixed(2);
+// ─── Roll-up total — sum unrounded values, round once ─────────────────────────
+const total_at_risk = +_totalRaw.toFixed(2);
 
 // ─── Write back into pressroom.json ───────────────────────────────────────────
 pressroom.revenue = {
