@@ -171,6 +171,12 @@
     font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
   .rev-framing{font-style:italic;color:var(--ink-soft);font-size:17px;
     max-width:700px;margin-bottom:22px;line-height:1.55}
+  .methodology{margin-top:16px;margin-bottom:32px}
+  .methodology summary{font-family:"Archivo",sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--crimson);cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:6px}
+  .methodology summary::-webkit-details-marker{display:none}
+  .methodology summary::before{content:"▸";font-size:9px;transition:transform .2s}
+  details[open].methodology summary::before{content:"▾"}
+  .methodology .method-body{font-size:15px;color:var(--ink-soft);line-height:1.65;margin-top:12px;max-width:700px;border-left:2px solid var(--rule);padding-left:16px}
   .leaks{width:100%;border-collapse:collapse}
   .leaks th{font-family:"Archivo",sans-serif;font-size:10px;letter-spacing:.2em;
     text-transform:uppercase;color:var(--ink-soft);padding:0 12px 13px;
@@ -326,6 +332,10 @@
         </div>
       </div>
       <div class="rev-chain" id="rev-chain"></div>
+      <details class="methodology">
+        <summary>Methodology</summary>
+        <p class="method-body">For each prompt, we start with how often it&rsquo;s actually asked (mentions), then apply an &lsquo;inclusion gap&rsquo; &mdash; a measure of how far Gemini sits below a competitive top-3 position, capped at 10 spots down. That gap is scaled to reflect how much visibility is actually being lost: a brand buried at position 13 loses more potential consideration than one sitting at position 4. From there, we apply two conversion assumptions: that 15% of users who&rsquo;d see a better-ranked competitor would consider switching, and 3% of those would actually convert &mdash; multiplied by average annual contract value per seat. The result is a directional estimate of revenue exposure per prompt, not a measured figure &mdash; useful for prioritizing which gaps matter most, not as a precise forecast.</p>
+      </details>
       <div class="rev-table-head"><h4>The Leaks No One Looks For</h4></div>
       <p class="rev-framing">Each is too small for a human to chase. Together, across every buried question, they are the cost of losing the verticals.</p>
       <table class="leaks">
