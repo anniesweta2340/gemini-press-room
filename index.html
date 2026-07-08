@@ -132,11 +132,11 @@
 
   /* ---- press kit (drafted fixes) ---- */
   .kit-panel{background:#1C1611;margin:0 -32px;padding:46px 32px 60px;border-top:none}
-  .kit-panel .sec-head h3{color:var(--cream)}
+  .kit-panel .sec-head h3{color:var(--cream);font-size:clamp(36px,5vw,56px);font-weight:700}
   .kit-panel .sec-head .note{color:var(--rule)}
   .kit-panel .clip-intro{color:var(--rule)}
   .kit-panel .fix{border-bottom-color:rgba(255,255,255,0.1)}
-  .kit-panel .fix .for{color:var(--crimson-bright)}
+  .kit-panel .fix .for{color:var(--crimson-bright);font-size:13px;letter-spacing:.14em}
   .kit-panel .fix .for span{color:var(--rule)}
   .kit-panel .fix .draft{color:var(--cream)}
   .kit-panel .fix-sources-label{color:var(--rule)}
@@ -649,11 +649,7 @@ if(fixes.length){
     const srcsHtml = srcs.length ? `<div class="fix-sources">
       <div class="fix-sources-label">Target sources</div>
       <div class="out-srcs">${srcs.map(s=>`
-        <div class="out-src">
-          <span class="od">${s.domain}</span>
-          <span class="oc ${s.channel}">${s.channel}</span>
-          <span class="osh">${s.share}% of citations</span>
-        </div>`).join('')}
+        <div class="out-src">${s.domain} &middot; ${s.channel} &middot; ${s.share}% of citations</div>`).join('')}
       </div></div>` : '';
     return `<div class="fix">
       <div class="for">Counter for: <span>&ldquo;${f.prompt}&rdquo;</span></div>
