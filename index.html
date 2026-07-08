@@ -692,58 +692,146 @@ window.kpRefresh = function(){
   if(!/^[A-Za-z0-9_\-]{12,}$/.test(v)){ note.className='kp-note'; note.textContent='That does not look like a valid key. Check and try again.'; return; }
   note.className='kp-note cmd';
   note.textContent='Key accepted. To regenerate from live data, run:  PROFOUND_API_KEY=*** node refresh.mjs';
-  document.getElementById('kp-input').value='';
 };
 
-// LIVE refresh from Profound (key comes from the input, never stored)
+// LIVE refresh from Profound — updates leaderboard, prompts, revenue, and sources
 window.kpLiveRefresh = async function(){
   const key = (document.getElementById('kp-input').value || '').trim();
   const note = document.getElementById('kp-note');
   if(!key){ note.className='kp-note'; note.textContent='Paste your Profound API key first.'; return; }
-  note.className='kp-note'; note.textContent='Pulling live citation data from Profound…';
+
+  const end = new Date().toISOString().slice(0,10);
+  const start = new Date(Date.now() - 30*864e5).toISOString().slice(0,10);
+  const CATEGORY_ID = '7943f355-67f3-4792-b172-981db56ef33c';
+  const hdrs = { 'Content-Type':'application/json', 'X-API-Key': key };
+  const pfetch = (path, body) => fetch('https://api.tryprofound.com/v1/reports/'+path, {
+    method:'POST', headers:hdrs,
+    body: JSON.stringify({ category_id:CATEGORY_ID, start_date:start, end_date:end, date_interval:'month', ...body })
+  }).then(r=>r.json());
+
   try {
-    const r = await fetch('https://api.tryprofound.com/v1/reports/citations', {
-      method:'POST',
-      headers:{ 'Content-Type':'application/json', 'X-API-Key': key },
-      body: JSON.stringify({
-        category_id:'7943f355-67f3-4792-b172-981db56ef33c',
-        start_date:'2026-05-07', end_date:'2026-06-06',
-        date_interval:'month', dimensions:['root_domain'],
-        metrics:['citation_share','count']
-      })
-    });
-    const d = await r.json();
-    if(!d.data){ note.className='kp-note'; note.textContent='No data returned — check the key.'; return; }
-    // aggregate by domain: metrics[0]=citation_share, metrics[1]=count
-    const agg = {};
-    d.data.forEach(row=>{
-      const dom = row.dimensions && row.dimensions[0];
-      const share = row.metrics && row.metrics[0];
-      if(!dom) return;
-      if(!agg[dom]) agg[dom] = 0;
-      agg[dom] += (share||0);
-    });
-    const top = Object.entries(agg).map(([domain,share])=>({domain, share:+(share*100).toFixed(2)}))
-      .sort((a,b)=>b.share-a.share).slice(0,12);
-    const maxShare = Math.max(...top.map(s=>s.share));
-    document.getElementById('sources').innerHTML = top.map((s,i)=>{
-      const flagged = /reddit/i.test(s.domain);
-      return `<div class="source ${flagged?'flagged':''}">
-        <div class="rk">${i+1}</div>
-        <div class="dom">${s.domain}</div>
-        <div class="track"><div class="fill" style="width:${(s.share/maxShare)*100}%"></div></div>
-        <div class="pct">${s.share}%</div>
-      </div>`;
+    note.className='kp-note'; note.textContent='1/3 — pulling leaderboard…';
+    const lbRaw = await pfetch('visibility', { dimensions:['asset_name'], metrics:['average_position','mentions_count','share_of_voice','visibility_score'] });
+
+    note.textContent='2/3 — pulling prompt rankings…';
+    const bpRaw = await pfetch('visibility', { dimensions:['asset_name','prompt'], metrics:['average_position','mentions_count','visibility_score'] });
+
+    note.textContent='3/3 — pulling citation sources…';
+    const citRaw = await pfetch('citations', { dimensions:['root_domain'], metrics:['citation_share','count'] });
+
+    if(!lbRaw.data || !bpRaw.data || !citRaw.data){
+      note.className='kp-note'; note.textContent='Incomplete data returned — check the key or category ID.'; return;
+    }
+
+    // --- leaderboard ---
+    const llm = /^(gemini|google|openai|chatgpt|claude|anthropic|copilot|perplexity|grok|deepseek|llama|mistral|microsoft)$/i;
+    const brandAgg = {};
+    for(const r of lbRaw.data){
+      const [pos,mentions,sov,vis] = r.metrics;
+      const name = r.dimensions[0];
+      if(!llm.test(name)) continue;
+      const b = (brandAgg[name] ??= {brand:name,mentions:0,sov:0,vis:0,posSum:0,n:0});
+      b.mentions += mentions||0; b.sov += sov||0;
+      b.vis = Math.max(b.vis, vis||0); b.posSum += pos||0; b.n++;
+    }
+    const leaderboard = Object.values(brandAgg)
+      .map(b=>({brand:b.brand, sov:+(b.sov*100).toFixed(2), visibility:+(b.vis*100).toFixed(1), avg_position:+(b.posSum/b.n).toFixed(1), mentions:b.mentions}))
+      .sort((a,b)=>b.sov-a.sov);
+
+    // --- worst prompts for Gemini ---
+    const gemPrompts = bpRaw.data
+      .filter(r=>r.dimensions[0]==='Gemini')
+      .map(r=>({prompt:r.dimensions[1], avg_position:r.metrics[0], mentions:r.metrics[1], visibility:+(r.metrics[2]*100).toFixed(1)}))
+      .filter(p=>p.mentions>=3)
+      .sort((a,b)=>b.avg_position-a.avg_position);
+
+    // --- sources ---
+    const sources = citRaw.data
+      .map(r=>({domain:r.dimensions[0], share:+(r.metrics[0]*100).toFixed(2), count:r.metrics[1]}))
+      .sort((a,b)=>b.count-a.count).slice(0,12);
+
+    // --- revenue (mirrors revenue_ladder.mjs) ---
+    const CR=0.15, CVR=0.03, ACV=240, GAP_CAP=10;
+    const revenuePrompts = gemPrompts.filter(p=>p.avg_position>3).map(p=>{
+      const gap = Math.min(p.avg_position-3, GAP_CAP)/GAP_CAP;
+      const rev = +(p.mentions * gap * CR * CVR * ACV).toFixed(2);
+      return {...p, inclusion_gap:+gap.toFixed(3), revenue_at_risk:rev};
+    }).sort((a,b)=>b.revenue_at_risk-a.revenue_at_risk);
+    const total_at_risk = +revenuePrompts.reduce((s,p)=>s+p.revenue_at_risk,0).toFixed(2);
+
+    // --- Gemini hero ---
+    const gemini = leaderboard.find(b=>/^gemini$/i.test(b.brand)) || {};
+    const gemRank = leaderboard.findIndex(b=>/^gemini$/i.test(b.brand))+1;
+    const ordinal = {1:'first',2:'second',3:'third',4:'fourth',5:'fifth'}[gemRank]||(gemRank+'th');
+
+    // --- window label ---
+    const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const now = new Date();
+    document.getElementById('window-label').textContent = 'Live · refreshed '+mo[now.getMonth()]+' '+now.getDate()+', '+now.getFullYear();
+
+    // --- cover lede + stats ---
+    document.getElementById('cover-lede').innerHTML =
+      `<p>By raw presence, Gemini is a front-runner — <b>${ordinal} among AI assistants</b> with ${gemini.visibility}% visibility and ${fmt(gemini.mentions)} mentions across the category. It is, by any measure, in the room.</p>`+
+      `<p>But presence is not position. Gemini&rsquo;s average rank of <b style="color:var(--crimson)">${gemini.avg_position}</b> is the weakest of the leaders — and the moment a question turns specialized, it slides to the bottom of the page. Gemini wins the category and loses the verticals.</p>`;
+    document.getElementById('stats').innerHTML = [
+      {lab:'Rank Among Assistants', val:'№ '+gemRank, sub:'by share of voice'},
+      {lab:'Share of Voice', val:gemini.sov+'%', sub:'of all category mentions'},
+      {lab:'Visibility', val:gemini.visibility+'%', sub:'of answers mention Gemini'},
+      {lab:'Average Position', val:gemini.avg_position, sub:'where it lands in the list', flag:true, tag:'Weakest of the leaders'}
+    ].map(s=>`<div class="stat ${s.flag?'flag':''}"><div class="lab">${s.lab}</div><div class="val">${s.val}</div><div class="sub">${s.sub}</div>${s.tag?`<span class="flagtag">${s.tag}</span>`:''}</div>`).join('');
+
+    // --- standings ---
+    const maxSov2 = Math.max(...leaderboard.map(b=>b.sov));
+    document.getElementById('standings-body').innerHTML = leaderboard.map((b,i)=>{
+      const hero = /^gemini$/i.test(b.brand);
+      const w = Math.max(4,(b.sov/maxSov2)*120);
+      return `<tr class="${hero?'hero':''}"><td>${i+1}</td><td>${b.brand}</td><td><span class="bar ${hero?'':'soft'}" style="width:${w}px"></span><span class="num">${b.sov}%</span></td><td class="num">${b.visibility}%</td><td class="num pos">${b.avg_position}</td><td class="num">${fmt(b.mentions)}</td></tr>`;
     }).join('');
+
+    // --- clips ---
+    document.getElementById('clips').innerHTML = gemPrompts.slice(0,8).map((p,i)=>`
+      <div class="clip">
+        <div class="ord">№ ${String(i+1).padStart(2,'0')}</div>
+        <div class="q">&ldquo;${p.prompt}&rdquo;</div>
+        <div class="meta">
+          <div class="pos"><b>${Math.round(p.avg_position)}</b>position in the answer</div>
+          <div class="men">${p.mentions} mentions</div>
+        </div>
+      </div>`).join('');
+
+    // --- sources ---
+    const maxSh = Math.max(...sources.map(s=>s.share));
+    document.getElementById('sources').innerHTML = sources.map((s,i)=>{
+      const flagged = /reddit/i.test(s.domain);
+      return `<div class="source ${flagged?'flagged':''}"><div class="rk">${i+1}</div><div class="dom">${s.domain}</div><div class="track"><div class="fill" style="width:${(s.share/maxSh)*100}%"></div></div><div class="pct">${s.share}%</div></div>`;
+    }).join('');
+    const topSrc = sources[0];
+    if(topSrc && /reddit/i.test(topSrc.domain)){
+      document.getElementById('press-note').innerHTML = `The single most-quoted source isn&rsquo;t a tech publication — it&rsquo;s <b>Reddit</b>, at ${topSrc.share}% of all citations. To move the answer, you have to move the conversation where the engines actually listen.`;
+    }
+
+    // --- revenue band ---
+    const fmtMoney = n=>'$'+Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+    const band = document.getElementById('rev-band');
+    if(band) band.style.display='';
+    document.getElementById('rev-total').textContent = fmtMoney(total_at_risk);
+    document.getElementById('rev-chain').textContent = `consideration ${CR*100}% · conversion ${CVR*100}% · $${ACV}/seat/yr · multiplier 1×`;
+    document.getElementById('leaks-body').innerHTML = revenuePrompts.slice(0,8).map((p,i)=>`
+      <tr><td>${i+1}</td><td>&ldquo;${p.prompt}&rdquo;</td><td class="lk-pos">${p.avg_position}</td><td class="lk-risk" data-base="${p.revenue_at_risk}">${fmtMoney(p.revenue_at_risk)}</td></tr>`).join('');
+    window.revToggle = function(mode){
+      document.getElementById('rev-btn-sampled').classList.toggle('active',mode==='sampled');
+      document.getElementById('rev-btn-volume').classList.toggle('active',mode==='volume');
+      const mult = mode==='volume' ? 20 : 1;
+      document.getElementById('rev-total').textContent = fmtMoney(total_at_risk*mult);
+      document.getElementById('rev-caption').textContent = mode==='volume' ? 'extrapolated — set VOLUME_MULTIPLIER' : '';
+      document.querySelectorAll('#leaks-body td.lk-risk').forEach(td=>{
+        td.textContent = fmtMoney(parseFloat(td.dataset.base)*mult);
+      });
+    };
+
     note.className='kp-note cmd';
-    note.textContent='✓ Live from Profound — '+d.info.total_rows.toLocaleString()+' citation rows, refreshed just now.';
-    // live-date-update: reflect the refresh time in the masthead window label
-    try {
-      const now = new Date();
-      const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      const wl = document.getElementById('window-label');
-      if(wl) wl.textContent = 'Refreshed live · ' + mo[now.getMonth()] + ' ' + now.getDate() + ', ' + now.getFullYear();
-    } catch(e){}
+    note.textContent='✓ Live from Profound — leaderboard, prompt rankings, revenue & sources updated · '+start+' → '+end;
+
   } catch(e){
     note.className='kp-note'; note.textContent='Live call failed: '+e.message;
   }
