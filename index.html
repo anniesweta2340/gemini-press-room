@@ -649,7 +649,11 @@ if(fixes.length){
     const srcsHtml = srcs.length ? `<div class="fix-sources">
       <div class="fix-sources-label">Target sources</div>
       <div class="out-srcs">${srcs.map(s=>`
-        <div class="out-src">${s.domain} &middot; ${s.channel} &middot; ${s.share}% of citations</div>`).join('')}
+        <div class="out-src">
+          <span class="od">${s.domain}</span>
+          <span class="oc ${s.channel}">${s.channel}</span>
+          <span class="osh">${s.share}%</span>
+        </div>`).join('')}
       </div></div>` : '';
     return `<div class="fix">
       <div class="for">Counter for: <span>&ldquo;${f.prompt}&rdquo;</span></div>
