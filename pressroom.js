@@ -88,14 +88,14 @@ window.PRESSROOM_DATA = {
       "sov": 0.54,
       "visibility": 4.1,
       "avg_position": 5.2,
-      "mentions": 720
+      "mentions": 721
     },
     {
       "brand": "Llama",
-      "sov": 0.1,
-      "visibility": 0.7,
-      "avg_position": 6.1,
-      "mentions": 115
+      "sov": 0.11,
+      "visibility": 0.8,
+      "avg_position": 6.0,
+      "mentions": 126
     },
     {
       "brand": "Copilot",
@@ -103,20 +103,6 @@ window.PRESSROOM_DATA = {
       "visibility": 0.5,
       "avg_position": 6.7,
       "mentions": 79
-    },
-    {
-      "brand": "LLaMA",
-      "sov": 0.01,
-      "visibility": 0.1,
-      "avg_position": 5.2,
-      "mentions": 11
-    },
-    {
-      "brand": "MISTRAL",
-      "sov": 0,
-      "visibility": 0,
-      "avg_position": 9,
-      "mentions": 1
     },
     {
       "brand": "Deepseek",
