@@ -139,6 +139,8 @@
   .fix .for{font-family:"Archivo",sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--crimson);font-weight:700;margin-bottom:6px}
   .fix .for span{color:var(--ink-soft);font-weight:400}
   .fix .draft{font-size:17px;line-height:1.55}
+  .fix-sources{margin:10px 0 14px}
+  .fix-sources-label{font-family:"Archivo",sans-serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:8px}
 
   /* ---- footer ---- */
   footer{border-top:3px solid var(--crimson);margin-top:30px;padding:30px 0 70px;text-align:center}
@@ -301,7 +303,7 @@
 
     <div class="cover">
       <div class="reveal" style="animation-delay:.1s">
-        <div class="kicker">Cover Story</div>
+        <div class="kicker">In Focus</div>
         <h2 id="cover-headline">The Generalist That Loses the Specialists</h2>
         <div class="lede" id="cover-lede"></div>
       </div>
@@ -395,9 +397,6 @@
       <p class="infl-note" id="infl-fingerprint"></p>
       <div id="brand-community"></div>
 
-      <h4 class="infl-subhead">The Outreach List</h4>
-      <p class="infl-note">The real sources already shaping each answer — pulled from live citation data. This is where to engage, by name.</p>
-      <div id="outreach"></div>
     </section>
 
     <section class="reveal">
@@ -632,14 +631,27 @@ if(topSource && /reddit/i.test(topSource.domain)){
   }
 })();
 
-// press kit
+// press kit (with outreach sources folded in per prompt)
+const outreach = DATA.outreach || [];
 const fixes = DATA.fixes || [];
 if(fixes.length){
-  document.getElementById("kit").innerHTML = fixes.map(f=>`
-    <div class="fix">
+  document.getElementById("kit").innerHTML = fixes.map(f=>{
+    const srcs = (outreach.find(o=>o.prompt===f.prompt)?.sources||[]);
+    const srcsHtml = srcs.length ? `<div class="fix-sources">
+      <div class="fix-sources-label">Target sources</div>
+      <div class="out-srcs">${srcs.map(s=>`
+        <div class="out-src">
+          <span class="od">${s.domain}</span>
+          <span class="oc ${s.channel}">${s.channel}</span>
+          <span class="osh">${s.share}%</span>
+        </div>`).join('')}
+      </div></div>` : '';
+    return `<div class="fix">
       <div class="for">Counter for: <span>&ldquo;${f.prompt}&rdquo;</span></div>
+      ${srcsHtml}
       <div class="draft">${f.draft}</div>
-    </div>`).join("");
+    </div>`;
+  }).join("");
 } else {
   document.getElementById("kit").innerHTML =
     `<div class="kit-empty"><b>Stage Two</b>For each buried question, the desk drafts the content that would lift Gemini back to the headline — grounded in the sources the engines already trust. Run the diagnosis agent to fill this page.</div>`;
@@ -683,23 +695,7 @@ if(fixes.length){
       td.textContent = fmtMoney(parseFloat(td.dataset.base) * mult);
     });
   };
-  // outreach list (real cited sources per prompt)
-  const out = DATA.outreach || [];
-  const oe = document.getElementById('outreach');
-  if(oe && out.length){
-    oe.innerHTML = out.map(o=>`
-      <div class="out-row">
-        <div class="oq">&ldquo;${o.prompt}&rdquo;</div>
-        <div class="out-srcs">
-          ${(o.sources||[]).map(s=>`
-            <div class="out-src">
-              <span class="od">${s.domain}</span>
-              <span class="oc ${s.channel}">${s.channel}</span>
-              <span class="osh">${s.share}%</span>
-            </div>`).join('')}
-        </div>
-      </div>`).join('');
-  }
+
 })();
 
 // live refresh (demo mode — safe, no client-side API calls)
