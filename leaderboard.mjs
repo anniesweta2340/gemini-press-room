@@ -18,12 +18,24 @@ const res = await client.reports.visibility({
 });
 
 const rows = res.data ?? [];
+
+// Keep in sync with the canonical list in build_pressroom.mjs — normalize by
+// lowercase+trimmed key so API casing drift (e.g. "Llama" vs "LLaMA") can't
+// split one brand into multiple leaderboard rows.
+const CANONICAL_BRANDS = [
+  "Gemini", "Google", "OpenAI", "ChatGPT", "Claude", "Anthropic",
+  "Copilot", "Perplexity", "Grok", "DeepSeek", "Llama", "Mistral", "Microsoft",
+];
+const canonicalByKey = new Map(CANONICAL_BRANDS.map(b => [b.toLowerCase().trim(), b]));
+const normalizeBrandKey = (name) => name.trim().toLowerCase();
+const canonicalBrandName = (name) => canonicalByKey.get(normalizeBrandKey(name)) ?? name.trim();
+
 const byBrand = {};
 for (const r of rows) {
-  const name = r.dimensions[0];
+  const key = normalizeBrandKey(r.dimensions[0]);
   const [pos, mentions, sov, vis] = r.metrics;
-  if (!byBrand[name]) byBrand[name] = { brand: name, mentions: 0, sov: 0, vis: 0, posSum: 0, n: 0 };
-  const b = byBrand[name];
+  if (!byBrand[key]) byBrand[key] = { brand: canonicalBrandName(r.dimensions[0]), mentions: 0, sov: 0, vis: 0, posSum: 0, n: 0 };
+  const b = byBrand[key];
   b.mentions += mentions || 0;
   b.sov += sov || 0;
   b.vis = Math.max(b.vis, vis || 0);

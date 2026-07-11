@@ -10,6 +10,20 @@ const arr = Array.isArray(categories) ? categories : (categories?.data ?? []);
 const categoryId = process.env.CATEGORY_ID || arr[0]?.id;
 const range = { category_id: categoryId, start_date: start, end_date: end, date_interval: "month" };
 
+// Canonical display name for every brand we track, keyed by lowercase+trimmed
+// name. The Profound API is not guaranteed to return consistent casing for
+// asset_name between pulls (e.g. "Llama" vs "LLaMA", "Copilot" vs "CoPilot"),
+// so all brand aggregation MUST key off this normalized form rather than the
+// raw string — otherwise case variants silently split into separate
+// leaderboard rows on refresh.
+const CANONICAL_BRANDS = [
+  "Gemini", "Google", "OpenAI", "ChatGPT", "Claude", "Anthropic",
+  "Copilot", "Perplexity", "Grok", "DeepSeek", "Llama", "Mistral", "Microsoft",
+];
+const canonicalByKey = new Map(CANONICAL_BRANDS.map(b => [b.toLowerCase().trim(), b]));
+const normalizeBrandKey = (name) => name.trim().toLowerCase();
+const canonicalBrandName = (name) => canonicalByKey.get(normalizeBrandKey(name)) ?? name.trim();
+
 // --- 1) BRAND LEADERBOARD ---
 const lb = await client.reports.visibility({
   ...range,
@@ -19,8 +33,8 @@ const lb = await client.reports.visibility({
 const brandAgg = {};
 for (const r of lb.data) {
   const [pos, mentions, sov, vis] = r.metrics;
-  const name = r.dimensions[0];
-  const b = (brandAgg[name] ??= { brand: name, mentions: 0, sov: 0, vis: 0, posSum: 0, n: 0 });
+  const key = normalizeBrandKey(r.dimensions[0]);
+  const b = (brandAgg[key] ??= { brand: canonicalBrandName(r.dimensions[0]), mentions: 0, sov: 0, vis: 0, posSum: 0, n: 0 });
   b.mentions += mentions || 0; b.sov += sov || 0;
   b.vis = Math.max(b.vis, vis || 0); b.posSum += pos || 0; b.n++;
 }
@@ -37,7 +51,7 @@ const bp = await client.reports.visibility({
   metrics: ["average_position", "mentions_count", "visibility_score"],
 });
 const gemPrompts = bp.data
-  .filter(r => r.dimensions[0] === "Gemini")
+  .filter(r => normalizeBrandKey(r.dimensions[0]) === "gemini")
   .map(r => ({ prompt: r.dimensions[1], avg_position: r.metrics[0], mentions: r.metrics[1], visibility: +(r.metrics[2] * 100).toFixed(1) }))
   .filter(p => p.mentions >= 3)                       // ignore noise
   .sort((a, b) => b.avg_position - a.avg_position);   // worst position first
