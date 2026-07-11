@@ -90,18 +90,8 @@
   .bar{display:inline-block;height:7px;background:var(--crimson);vertical-align:middle;border-radius:1px;margin-right:8px}
   .bar.soft{background:var(--rule)}
 
-  /* ---- clippings (worst prompts) ---- */
+  /* ---- section intros ---- */
   .clip-intro{font-style:italic;color:var(--ink-soft);max-width:680px;margin-bottom:28px;font-size:18px}
-  .clips{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule-soft);border:1px solid var(--rule-soft)}
-  @media(max-width:680px){.clips{grid-template-columns:1fr}}
-  .clip{background:var(--paper);padding:24px 22px;position:relative}
-  .clip .q{font-family:"Bodoni Moda",serif;font-size:22px;line-height:1.12;font-weight:500;margin-bottom:14px;text-transform:lowercase}
-  .clip .q::first-letter{text-transform:uppercase}
-  .clip .meta{display:flex;gap:18px;align-items:baseline;font-family:"Archivo",sans-serif}
-  .clip .pos{font-size:13px;letter-spacing:.04em}
-  .clip .pos b{font-family:"Bodoni Moda",serif;font-size:30px;color:var(--crimson);font-weight:700;margin-right:4px}
-  .clip .men{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
-  .clip .ord{position:absolute;top:18px;right:20px;font-family:"Bodoni Moda",serif;font-size:14px;font-style:italic;color:var(--rule)}
 
   /* ---- sources (the press) ---- */
   .source{display:grid;grid-template-columns:30px 1.3fr 3fr auto;gap:14px;align-items:center;
@@ -186,37 +176,6 @@
   .leaks td.lk-pos{font-family:"Archivo",sans-serif;font-variant-numeric:tabular-nums;
     font-size:15px;color:var(--ink-soft)}
   .leaks td.lk-risk{font-family:"Bodoni Moda",serif;font-size:22px;font-weight:700;color:var(--crimson)}
-
-  /* ---- influence desk ---- */
-  .infl-playbook{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start;margin-bottom:8px}
-  @media(max-width:780px){.infl-playbook{grid-template-columns:1fr;gap:20px}}
-  .infl-lede{font-size:18px;line-height:1.6;color:var(--ink)}
-  .infl-lede .big{font-family:"Bodoni Moda",serif;font-size:40px;font-weight:700;color:var(--crimson);display:block;line-height:1;margin-bottom:8px}
-  .chan{display:grid;grid-template-columns:1.4fr 3fr auto;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--rule-soft)}
-  .chan .nm{font-family:"Archivo",sans-serif;font-size:13px;font-weight:600}
-  .chan .tk{height:8px;background:var(--cream-deep);border-radius:1px;overflow:hidden}
-  .chan .fl{height:100%;background:var(--crimson)}
-  .chan .pc{font-family:"Archivo",sans-serif;font-variant-numeric:tabular-nums;font-size:13px;color:var(--ink-soft);text-align:right;min-width:42px}
-  .chan.earned .nm{color:var(--crimson)}
-  .infl-subhead{font-family:"Bodoni Moda",serif;font-size:clamp(22px,2.6vw,30px);font-weight:700;
-    letter-spacing:-.01em;margin:40px 0 8px}
-  .infl-note{font-style:italic;color:var(--ink-soft);font-size:16px;max-width:680px;margin-bottom:20px;line-height:1.55}
-  .bcom{display:grid;grid-template-columns:1.2fr 3fr auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--rule-soft)}
-  .bcom .bn{font-family:"Bodoni Moda",serif;font-size:21px;font-weight:500}
-  .bcom .tk{height:11px;background:var(--cream-deep);border-radius:1px;overflow:hidden}
-  .bcom .fl{height:100%;background:var(--rule)}
-  .bcom .pc{font-family:"Archivo",sans-serif;font-variant-numeric:tabular-nums;font-size:16px;color:var(--ink-soft);text-align:right;min-width:56px}
-  .bcom.lead .bn{color:var(--crimson);font-weight:700}
-  .bcom.lead .fl{background:var(--crimson)}
-  .bcom.you .bn{font-style:italic}
-  .desk-card{background:var(--paper);border:1px solid var(--rule-soft);padding:20px 22px;margin-bottom:12px;
-    display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center}
-  @media(max-width:680px){.desk-card{grid-template-columns:1fr;gap:10px}}
-  .desk-card .dq{font-family:"Bodoni Moda",serif;font-size:19px;font-weight:500}
-  .desk-card .dsrc{font-family:"Archivo",sans-serif;font-size:12px;color:var(--ink-soft);margin-top:5px;letter-spacing:.02em}
-  .desk-card .rec{text-align:right}
-  .desk-card .rec .lab{font-family:"Archivo",sans-serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft)}
-  .desk-card .rec .ch{font-family:"Bodoni Moda",serif;font-size:18px;font-weight:700;color:var(--crimson);margin-top:3px}
 
   /* ---- outreach list ---- */
   .out-row{background:var(--paper);border:1px solid var(--rule-soft);padding:18px 22px;margin-bottom:12px}
@@ -336,38 +295,12 @@
 
     <section class="reveal">
       <div class="sec-head">
-        <h3>Where Gemini Loses the Headline</h3>
-        <div class="note">Drill-down &middot; position detail</div>
-      </div>
-      <p class="clip-intro">The same prompts driving revenue leakage above &mdash; shown here by ranking position. Gemini appears in each answer but far enough down to read as an afterthought. The position number is what a rival occupies instead.</p>
-      <div class="clips" id="clips"></div>
-    </section>
-
-    <section class="reveal">
-      <div class="sec-head">
         <h3>Top Cited Sources</h3>
         <div class="note">Top cited sources</div>
       </div>
       <p class="clip-intro">The sources LLMs cite most when forming AI answers &mdash; which means these platforms are where editorial presence directly translates into answer-engine authority.</p>
       <div id="sources"></div>
       <p class="press-note" id="press-note"></p>
-    </section>
-
-    <section class="reveal">
-      <div class="sec-head">
-        <h3>The Influence Desk</h3>
-        <div class="note">Where the narrative is made</div>
-      </div>
-      <p class="clip-intro">You cannot buy your way into an AI answer — you have to be <em>talked about</em> where the engines listen. The brands that win are the ones whose communities flood those surfaces.</p>
-
-      <div class="infl-playbook">
-        <div class="infl-lede" id="infl-lede"></div>
-        <div id="channel-mix"></div>
-      </div>
-
-      <p class="infl-note" id="infl-fingerprint"></p>
-      <div id="brand-community"></div>
-
     </section>
 
     <section class="reveal kit-panel">
@@ -498,17 +431,6 @@ document.getElementById("standings-body").innerHTML = DATA.leaderboard.map((b,i)
   </tr>`;
 }).join("");
 
-// clippings
-document.getElementById("clips").innerHTML = (DATA.gemini_worst_prompts||[]).slice(0,8).map((p,i)=>`
-  <div class="clip">
-    <div class="ord">№ ${String(i+1).padStart(2,'0')}</div>
-    <div class="q">&ldquo;${p.prompt}&rdquo;</div>
-    <div class="meta">
-      <div class="pos"><b>${Math.round(p.avg_position)}</b>position in the answer</div>
-      <div class="men">${p.mentions} mentions</div>
-    </div>
-  </div>`).join("");
-
 // sources
 const maxShare = Math.max(...DATA.top_sources.map(s=>s.share));
 document.getElementById("sources").innerHTML = DATA.top_sources.slice(0,12).map((s,i)=>{
@@ -525,70 +447,6 @@ if(topSource && /reddit/i.test(topSource.domain)){
   document.getElementById("press-note").innerHTML =
     `The single most-quoted source isn&rsquo;t a tech publication — it&rsquo;s <b>Reddit</b>, at ${topSource.share}% of all citations. To move the answer, you have to move the conversation where the engines actually listen.`;
 }
-
-// influence desk
-(function(){
-  const inf = DATA.influence;
-  if(!inf){ return; }
-  const earned = /Community|Creators|Writers|Social|Review/;
-
-  // playbook lede + channel mix
-  const mix = inf.channel_mix || [];
-  const earnedTotal = mix.filter(c=>earned.test(c.channel)).reduce((s,c)=>s+c.share,0);
-  const ledeEl = document.getElementById('infl-lede');
-  if(ledeEl){
-    ledeEl.innerHTML = `<span class="big">${earnedTotal.toFixed(0)}%</span>`+
-      `of brand mentions are carried by community, creator, and earned surfaces — not by paid media or owned pages. In AI answers, being recommended is a function of being <em>discussed</em>.`;
-  }
-  const maxC = Math.max(...mix.map(c=>c.share));
-  const cm = document.getElementById('channel-mix');
-  if(cm){
-    cm.innerHTML = mix.map(c=>`
-      <div class="chan ${earned.test(c.channel)?'earned':''}">
-        <div class="nm">${c.channel}</div>
-        <div class="tk"><div class="fl" style="width:${(c.share/maxC)*100}%"></div></div>
-        <div class="pc">${c.share}%</div>
-      </div>`).join('');
-  }
-
-  // brand community share (ambassador fingerprint)
-  const bc = inf.brand_community_share || [];
-  const fp = document.getElementById('infl-fingerprint');
-  const claude = bc.find(b=>/claude/i.test(b.brand));
-  const gem = bc.find(b=>/gemini/i.test(b.brand));
-  if(fp && claude && gem){
-    fp.innerHTML = `Ambassador and creator activity never appears as a citation itself — it shows up as <em>community-carried mentions</em>. Claude&rsquo;s mentions are the most community-driven of the field (${claude.community_share}% vs Gemini&rsquo;s ${gem.community_share}%) — the measurable signature of a community program rivals haven&rsquo;t matched.`;
-  }
-  const maxB = Math.max(...bc.map(b=>b.community_share));
-  const bcEl = document.getElementById('brand-community');
-  if(bcEl){
-    bcEl.innerHTML = bc.map((b,i)=>`
-      <div class="bcom ${i===0?'lead':''} ${/gemini/i.test(b.brand)?'you':''}">
-        <div class="bn">${b.brand}</div>
-        <div class="tk"><div class="fl" style="width:${(b.community_share/maxB)*100}%"></div></div>
-        <div class="pc">${b.community_share}%</div>
-      </div>`).join('');
-  }
-
-  // deployment map
-  const desk = inf.desk || [];
-  const de = document.getElementById('infl-desk');
-  if(de){
-    de.innerHTML = desk.map(d=>{
-      const srcs = (d.top_sources||[]).map(s=>s.domain).slice(0,3).join(' · ');
-      return `<div class="desk-card">
-        <div>
-          <div class="dq">&ldquo;${d.prompt}&rdquo;</div>
-          <div class="dsrc">Winning sources: ${srcs || '—'}</div>
-        </div>
-        <div class="rec">
-          <div class="lab">Deploy on</div>
-          <div class="ch">${d.recommended_channel}</div>
-        </div>
-      </div>`;
-    }).join('');
-  }
-})();
 
 // press kit (with outreach sources folded in per prompt)
 const outreach = DATA.outreach || [];
@@ -760,17 +618,6 @@ window.kpLiveRefresh = async function(){
       const w = Math.max(4,(b.sov/maxSov2)*120);
       return `<tr class="${hero?'hero':''}"><td>${i+1}</td><td>${b.brand}</td><td><span class="bar ${hero?'':'soft'}" style="width:${w}px"></span><span class="num">${b.sov}%</span></td><td class="num">${b.visibility}%</td><td class="num pos">${b.avg_position}</td><td class="num">${fmt(b.mentions)}</td></tr>`;
     }).join('');
-
-    // --- clips ---
-    document.getElementById('clips').innerHTML = gemPrompts.slice(0,8).map((p,i)=>`
-      <div class="clip">
-        <div class="ord">№ ${String(i+1).padStart(2,'0')}</div>
-        <div class="q">&ldquo;${p.prompt}&rdquo;</div>
-        <div class="meta">
-          <div class="pos"><b>${Math.round(p.avg_position)}</b>position in the answer</div>
-          <div class="men">${p.mentions} mentions</div>
-        </div>
-      </div>`).join('');
 
     // --- sources ---
     const maxSh = Math.max(...sources.map(s=>s.share));
