@@ -11,7 +11,7 @@ window.PRESSROOM_DATA = {
     "avg_position": 4.6,
     "mentions": 7922
   },
-  "rank_among_llms": 3,
+  "rank_among_llms": 2,
   "leaderboard": [
     {
       "brand": "Claude",
@@ -21,13 +21,6 @@ window.PRESSROOM_DATA = {
       "mentions": 10332
     },
     {
-      "brand": "Google",
-      "sov": 5.86,
-      "visibility": 43.5,
-      "avg_position": 3.8,
-      "mentions": 8238
-    },
-    {
       "brand": "Gemini",
       "sov": 5.69,
       "visibility": 43.2,
@@ -35,32 +28,11 @@ window.PRESSROOM_DATA = {
       "mentions": 7922
     },
     {
-      "brand": "OpenAI",
-      "sov": 5.58,
-      "visibility": 41.9,
-      "avg_position": 3.5,
-      "mentions": 8056
-    },
-    {
       "brand": "ChatGPT",
       "sov": 5.22,
       "visibility": 40,
       "avg_position": 4,
       "mentions": 7614
-    },
-    {
-      "brand": "Anthropic",
-      "sov": 4.57,
-      "visibility": 35.4,
-      "avg_position": 4,
-      "mentions": 6756
-    },
-    {
-      "brand": "Microsoft",
-      "sov": 2.26,
-      "visibility": 16.6,
-      "avg_position": 4.7,
-      "mentions": 3204
     },
     {
       "brand": "Grok",

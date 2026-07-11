@@ -57,17 +57,8 @@
   .rule-fancy::before,.rule-fancy::after{content:"";height:1px;background:var(--rule);flex:1}
   .rule-fancy span{font-family:"Archivo",sans-serif;font-size:10px;letter-spacing:.3em;color:var(--ink-soft);text-transform:uppercase}
 
-  /* ---- cover story ---- */
-  .cover{padding:64px 0 20px;display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:start}
-  @media(max-width:780px){.cover{grid-template-columns:1fr;gap:28px}}
-  .cover .kicker{font-family:"Archivo",sans-serif;font-size:11px;letter-spacing:.34em;
-    text-transform:uppercase;color:var(--crimson);font-weight:700;margin-bottom:12px}
-  .cover h2{font-family:"Bodoni Moda",serif;font-weight:700;font-size:clamp(42px,6.5vw,72px);
-    line-height:1.02;letter-spacing:-.01em;margin-bottom:20px}
-  .cover .lede{font-size:21px;color:var(--ink);line-height:1.6}
-  .cover .lede::first-letter{font-family:"Bodoni Moda",serif;float:left;font-size:74px;line-height:.72;
-    padding:8px 12px 0 0;color:var(--crimson);font-weight:700}
-  .cover .lede p{margin-bottom:14px}
+  /* ---- top stats anchor ---- */
+  .stats-top{padding:48px 0 20px}
 
   /* stat tombstones */
   .stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule-soft);
@@ -77,12 +68,6 @@
     color:var(--ink-soft);margin-bottom:8px}
   .stat .val{font-family:"Bodoni Moda",serif;font-size:46px;line-height:1;font-weight:700}
   .stat .sub{font-family:"Archivo",sans-serif;font-size:11px;color:var(--ink-soft);margin-top:6px;letter-spacing:.02em}
-  .stat.flag{background:#F3E2DF}
-  .stat.flag .val{color:var(--crimson)}
-  .stat.flag .lab{color:var(--crimson);font-weight:700}
-  .stat .flagtag{display:inline-block;font-family:"Archivo",sans-serif;font-size:9px;letter-spacing:.18em;
-    text-transform:uppercase;background:var(--crimson);color:#fff;padding:2px 7px;margin-top:8px;border-radius:1px}
-  .stat .stat-note{font-family:"Archivo",sans-serif;font-size:9px;color:var(--ink-soft);margin-top:5px;line-height:1.4;letter-spacing:.01em}
 
   /* ---- section heads ---- */
   section{padding:46px 0;border-top:1px solid var(--rule)}
@@ -257,12 +242,6 @@
   .kp-note.cmd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--cream-deep);padding:9px 12px;border-radius:2px;color:var(--ink);border-left:2px solid var(--crimson)}
   .metric-legend{font-family:"Archivo",sans-serif;font-size:11px;color:var(--ink-soft);margin-bottom:16px;line-height:1.7;letter-spacing:.01em}
   .metric-legend b{color:var(--ink);font-weight:600}
-  .sowhat{border-top:2px solid var(--crimson);border-bottom:1px solid var(--rule);padding:28px 0;margin:32px 0}
-  .sowhat .sowhat-label{font-family:"Archivo",sans-serif;font-size:10px;letter-spacing:.42em;text-transform:uppercase;color:var(--crimson);margin-bottom:12px}
-  .sowhat p{font-size:18px;line-height:1.65;color:var(--ink);max-width:820px}
-  .tldr{background:var(--cream-deep);border-left:3px solid var(--crimson);padding:20px 24px;margin:28px 0 0}
-  .tldr .tldr-label{font-family:"Archivo",sans-serif;font-size:10px;letter-spacing:.38em;text-transform:uppercase;color:var(--crimson);margin-bottom:8px}
-  .tldr p{font-size:17px;line-height:1.6;color:var(--ink)}
 
   /* mobile-sticker-fix */
   @media(max-width:680px){
@@ -305,25 +284,8 @@
       <div class="kp-note" id="kp-note">This report runs on a schedule. Enter your own Profound key to regenerate it from live data on your instance.</div>
     </div>
 
-    <div class="tldr reveal" style="animation-delay:.09s">
-      <div class="tldr-label">TL;DR</div>
-      <p>Gemini shows up everywhere but wins nowhere specific. It&rsquo;s the #3 AI assistant by raw visibility &mdash; but the moment a question gets specific (medical translation, OCR workflows, grad research), it drops out of the top 10 answers. Presence isn&rsquo;t the same as authority, and this report tracks exactly where that gap costs the most.</p>
-    </div>
-
-    <div class="cover">
-      <div class="reveal" style="animation-delay:.1s">
-        <div class="kicker">In Focus</div>
-        <h2 id="cover-headline">The Generalist That Loses the Specialists</h2>
-        <div class="lede" id="cover-lede"></div>
-      </div>
-      <div class="reveal" style="animation-delay:.18s">
-        <div class="stats" id="stats"></div>
-      </div>
-    </div>
-
-    <div class="sowhat reveal" style="animation-delay:.22s">
-      <div class="sowhat-label">So What</div>
-      <p>Gemini&rsquo;s category-level dominance is real but structurally fragile &mdash; it wins on breadth, not on the specific, high-intent questions where users are actually choosing their primary tool. That gap compounds: specialist queries are where community trust gets built (Reddit and creator content already drive 30% of category mentions), and losing them early means losing the source ecosystem that decides future rankings too. The priority isn&rsquo;t defending the category lead &mdash; it&rsquo;s closing the eight buried-prompt gaps identified here, starting with the three highest revenue-at-risk queries, because those are the leak points compounding fastest.</p>
+    <div class="stats-top reveal" style="animation-delay:.1s">
+      <div class="stats" id="stats"></div>
     </div>
 
     <div id="rev-band" class="rev-band reveal" style="animation-delay:.24s">
@@ -369,7 +331,7 @@
         </tr></thead>
         <tbody id="standings-body"></tbody>
       </table>
-      <p class="press-note">Note: Standings reflect product-level mentions, not parent-company rollups (e.g., &lsquo;Google&rsquo; and &lsquo;Gemini&rsquo; are tracked separately, as are &lsquo;OpenAI&rsquo;/&lsquo;ChatGPT&rsquo; and &lsquo;Anthropic&rsquo;/&lsquo;Claude&rsquo;) &mdash; since a mention of the company isn&rsquo;t necessarily a mention of the specific AI assistant product.</p>
+      <p class="press-note">Note: This table tracks AI assistant products specifically; parent companies (e.g. Google, OpenAI, Anthropic, Microsoft) are tracked separately and excluded here to keep the comparison apples-to-apples. Share of Voice reflects each product&rsquo;s share of the full AI-assistant category as tracked by Profound &mdash; not a share limited to the products shown in this table &mdash; so the percentages here intentionally don&rsquo;t sum to 100%.</p>
     </section>
 
     <section class="reveal">
@@ -429,15 +391,11 @@ const SAMPLE = {
   generated: new Date().toISOString(),
   window: { start: "2026-05-07", end: "2026-06-06" },
   hero: { brand:"Gemini", sov:5.69, visibility:43.2, avg_position:4.6, mentions:7922 },
-  rank_among_llms: 3,
+  rank_among_llms: 2,
   leaderboard: [
     {brand:"Claude",     sov:7.22, visibility:55.2, avg_position:4.0, mentions:10332},
-    {brand:"Google",     sov:5.86, visibility:43.5, avg_position:3.8, mentions:8238},
     {brand:"Gemini",     sov:5.69, visibility:43.2, avg_position:4.6, mentions:7922},
-    {brand:"OpenAI",     sov:5.58, visibility:41.9, avg_position:3.5, mentions:8056},
     {brand:"ChatGPT",    sov:5.22, visibility:40.0, avg_position:4.0, mentions:7614},
-    {brand:"Anthropic",  sov:4.57, visibility:35.4, avg_position:4.0, mentions:6756},
-    {brand:"Microsoft",  sov:2.26, visibility:16.7, avg_position:4.7, mentions:3204},
     {brand:"Grok",       sov:1.23, visibility:11.1, avg_position:5.5, mentions:1273},
     {brand:"DeepSeek",   sov:0.90, visibility:6.9,  avg_position:4.7, mentions:1376},
     {brand:"Perplexity", sov:0.90, visibility:6.7,  avg_position:4.3, mentions:1265}
@@ -509,28 +467,20 @@ if(DATA.window){
     pretty(DATA.window.start)+" — "+pretty(DATA.window.end)+", 2026";
 }
 
-// cover lede (data-driven)
+// stats
 const h = DATA.hero || {};
 const rank = DATA.rank_among_llms || "—";
-const ordinal = {1:"first",2:"second",3:"third",4:"fourth",5:"fifth"}[rank] || (rank+"th");
-document.getElementById("cover-lede").innerHTML =
-  `<p>By raw presence, Gemini is a front-runner — <b>${ordinal} among AI assistants</b> with ${h.visibility}% visibility and ${fmt(h.mentions)} mentions across the category. It is, by any measure, in the room.</p>`+
-  `<p>But presence is not position. Gemini&rsquo;s average rank of <b style="color:var(--crimson)">${h.avg_position}</b> is the weakest of the leaders — and the moment a question turns specialized, it slides to the bottom of the page. Gemini wins the category and loses the verticals.</p>`;
-
-// stats
 const stats = [
   {lab:"Rank Among Assistants", val:"№ "+rank, sub:"by share of voice"},
   {lab:"Share of Voice", val:h.sov+"%", sub:"of all category mentions"},
   {lab:"Visibility", val:h.visibility+"%", sub:"of answers mention Gemini"},
-  {lab:"Average Position", val:h.avg_position, sub:"where it lands in the list", flag:true, tag:"Weakest Avg. Position Among Top 5", note:"(Claude, Google, Gemini, OpenAI, ChatGPT — ranked by share of voice)"}
+  {lab:"Average Position", val:h.avg_position, sub:"where it lands in the list"}
 ];
 document.getElementById("stats").innerHTML = stats.map(s=>`
-  <div class="stat ${s.flag?'flag':''}">
+  <div class="stat">
     <div class="lab">${s.lab}</div>
     <div class="val">${s.val}</div>
     <div class="sub">${s.sub}</div>
-    ${s.tag?`<span class="flagtag">${s.tag}</span>`:''}
-    ${s.note?`<div class="stat-note">${s.note}</div>`:''}
   </div>`).join("");
 
 // standings
@@ -750,8 +700,8 @@ window.kpLiveRefresh = async function(){
     note.textContent='3/3 — pulling citation sources…';
     const citRows = await pfetch('citations', 'citations', { dimensions:['root_domain'], metrics:['citation_share','count'] });
 
-    // --- leaderboard ---
-    const llm = /^(gemini|google|openai|chatgpt|claude|anthropic|copilot|perplexity|grok|deepseek|llama|mistral|microsoft)$/i;
+    // --- leaderboard (assistant products only — parent companies tracked separately) ---
+    const llm = /^(gemini|chatgpt|claude|copilot|perplexity|grok|deepseek|llama|mistral)$/i;
     const brandAgg = {};
     for(const r of lbRows){
       const [pos,mentions,sov,vis] = r.metrics;
@@ -789,23 +739,19 @@ window.kpLiveRefresh = async function(){
     // --- Gemini hero ---
     const gemini = leaderboard.find(b=>/^gemini$/i.test(b.brand)) || {};
     const gemRank = leaderboard.findIndex(b=>/^gemini$/i.test(b.brand))+1;
-    const ordinal = {1:'first',2:'second',3:'third',4:'fourth',5:'fifth'}[gemRank]||(gemRank+'th');
 
     // --- window label ---
     const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     const now = new Date();
     document.getElementById('window-label').textContent = 'Live · refreshed '+mo[now.getMonth()]+' '+now.getDate()+', '+now.getFullYear();
 
-    // --- cover lede + stats ---
-    document.getElementById('cover-lede').innerHTML =
-      `<p>By raw presence, Gemini is a front-runner — <b>${ordinal} among AI assistants</b> with ${gemini.visibility}% visibility and ${fmt(gemini.mentions)} mentions across the category. It is, by any measure, in the room.</p>`+
-      `<p>But presence is not position. Gemini&rsquo;s average rank of <b style="color:var(--crimson)">${gemini.avg_position}</b> is the weakest of the leaders — and the moment a question turns specialized, it slides to the bottom of the page. Gemini wins the category and loses the verticals.</p>`;
+    // --- stats ---
     document.getElementById('stats').innerHTML = [
       {lab:'Rank Among Assistants', val:'№ '+gemRank, sub:'by share of voice'},
       {lab:'Share of Voice', val:gemini.sov+'%', sub:'of all category mentions'},
       {lab:'Visibility', val:gemini.visibility+'%', sub:'of answers mention Gemini'},
-      {lab:'Average Position', val:gemini.avg_position, sub:'where it lands in the list', flag:true, tag:'Weakest Avg. Position Among Top 5', note:'(Claude, Google, Gemini, OpenAI, ChatGPT — ranked by share of voice)'}
-    ].map(s=>`<div class="stat ${s.flag?'flag':''}"><div class="lab">${s.lab}</div><div class="val">${s.val}</div><div class="sub">${s.sub}</div>${s.tag?`<span class="flagtag">${s.tag}</span>`:''}${s.note?`<div class="stat-note">${s.note}</div>`:''}</div>`).join('');
+      {lab:'Average Position', val:gemini.avg_position, sub:'where it lands in the list'}
+    ].map(s=>`<div class="stat"><div class="lab">${s.lab}</div><div class="val">${s.val}</div><div class="sub">${s.sub}</div></div>`).join('');
 
     // --- standings ---
     const maxSov2 = Math.max(...leaderboard.map(b=>b.sov));

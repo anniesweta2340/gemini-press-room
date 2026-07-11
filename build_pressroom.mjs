@@ -38,10 +38,13 @@ for (const r of lb.data) {
   b.mentions += mentions || 0; b.sov += sov || 0;
   b.vis = Math.max(b.vis, vis || 0); b.posSum += pos || 0; b.n++;
 }
-const llm = /^(gemini|google|openai|chatgpt|claude|anthropic|copilot|perplexity|grok|deepseek|llama|mistral|microsoft)$/i;
+// Standings tracks AI assistant PRODUCTS only — parent companies (Google,
+// OpenAI, Anthropic, Microsoft) are excluded so the table isn't mixing
+// companies and products in one ranked list.
+const ASSISTANT_PRODUCTS = /^(gemini|chatgpt|claude|copilot|perplexity|grok|deepseek|llama|mistral)$/i;
 const leaderboard = Object.values(brandAgg)
   .map(b => ({ brand: b.brand, sov: +(b.sov * 100).toFixed(2), visibility: +(b.vis * 100).toFixed(1), avg_position: +(b.posSum / b.n).toFixed(1), mentions: b.mentions }))
-  .filter(b => llm.test(b.brand))
+  .filter(b => ASSISTANT_PRODUCTS.test(b.brand))
   .sort((a, b) => b.sov - a.sov);
 
 // --- 2) GEMINI'S WORST PROMPTS ---
