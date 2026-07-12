@@ -115,6 +115,7 @@
   .kit-panel .fix .for span{color:var(--rule)}
   .kit-panel .fix .draft{color:var(--cream)}
   .kit-panel .fix-sources-label{color:var(--rule)}
+  .kit-panel .kp-note{color:var(--rule)}
   .kit-empty{background:var(--paper);border:1px dashed var(--rule);padding:40px;text-align:center;
     font-style:italic;color:var(--ink-soft);font-size:17px}
   .kit-empty b{font-style:normal;color:var(--crimson);font-family:"Archivo",sans-serif;font-size:11px;
@@ -177,9 +178,7 @@
     font-size:15px;color:var(--ink-soft)}
   .leaks td.lk-risk{font-family:"Bodoni Moda",serif;font-size:22px;font-weight:700;color:var(--crimson)}
 
-  /* ---- outreach list ---- */
-  .out-row{background:var(--paper);border:1px solid var(--rule-soft);padding:18px 22px;margin-bottom:12px}
-  .out-row .oq{font-family:"Bodoni Moda",serif;font-size:18px;font-weight:500;margin-bottom:12px}
+  /* ---- press kit target-source chips ---- */
   .out-srcs{display:flex;flex-wrap:wrap;gap:10px}
   .out-src{display:flex;align-items:center;gap:8px;background:var(--cream);border:1px solid var(--rule-soft);border-radius:2px;padding:6px 11px;font-family:"Archivo",sans-serif;font-size:13px}
   .out-src .od{font-weight:600;color:var(--ink)}
@@ -187,7 +186,6 @@
   .out-src .oc.Community{background:#E8D5D0;color:var(--crimson)}
   .out-src .oc.Creator{background:#E3D9C4;color:var(--gold)}
   .out-src .oc.Vendor{background:#D9DEE0;color:#3A5560}
-  .out-src .osh{color:var(--ink-soft);font-variant-numeric:tabular-nums}
 
   /* ---- key panel ---- */
   .key-panel{max-width:1080px;margin:0 auto;padding:14px 0 0;border-top:1px solid var(--rule-soft)}
@@ -282,7 +280,7 @@
         <h3>The Standings</h3>
         <div class="note">Share of Voice &middot; Last 30 Days</div>
       </div>
-      <p class="clip-intro">The full competitive field, ranked by how much of the AI conversation each brand owns. Gemini&rsquo;s position here is the baseline every section below is trying to explain.</p>
+      <p class="clip-intro">The full competitive field, ranked by how much of the AI conversation each brand owns. Gemini&rsquo;s position here is the baseline the sections below build on.</p>
       <p class="metric-legend"><b>Share of Voice</b> — this brand&rsquo;s slice of all category mentions, relative to competitors. &ensp;<b>Visibility</b> — % of answers that mention this brand at all. &ensp;<b>Average Position</b> — where in the answer it typically lands (lower is better; position&nbsp;1 means named first).</p>
       <table class="standings">
         <thead><tr>
@@ -309,6 +307,11 @@
         <div class="note">Drafted counter-narrative</div>
       </div>
       <p class="clip-intro">Drafted responses to the specific queries where Gemini is losing ground, each anchored to the sources and framing the engines already treat as credible.</p>
+      <div class="kp-row" style="margin-bottom:16px">
+        <input id="kp-kit-input" type="password" placeholder="Paste your Anthropic API key to refresh these briefs live" autocomplete="off" />
+        <button id="kp-kit-btn" onclick="kpKitRefresh()">Refresh Press Kit</button>
+      </div>
+      <div class="kp-note" id="kp-kit-note">Optional — regenerates these briefs live via Claude, using the same diagnose → draft → self-evaluate pipeline as the CLI. Your key is sent directly to Anthropic from your browser and never stored.</div>
       <div id="kit"></div>
     </section>
 
@@ -388,6 +391,11 @@ const SAMPLE = {
 };
 
 const DATA = (window.PRESSROOM_DATA) ? window.PRESSROOM_DATA : SAMPLE;
+
+// Press Kit refresh diagnoses whichever revenue-at-risk prompts are current —
+// the static baked-in set, or the freshly Profound-live-refreshed set if that
+// ran first in this session.
+let currentRevenueByPrompt = DATA.revenue?.by_prompt || [];
 
 /* ---------- render ---------- */
 const fmt = n => (n==null?"—":Number(n).toLocaleString());
@@ -593,6 +601,7 @@ window.kpLiveRefresh = async function(){
       return {...p, inclusion_gap:+gap.toFixed(3), revenue_at_risk:+raw.toFixed(2), _raw:raw};
     }).sort((a,b)=>b.revenue_at_risk-a.revenue_at_risk);
     const total_at_risk = +revenuePrompts.reduce((s,p)=>s+p._raw,0).toFixed(2);  // sum unrounded, round once
+    currentRevenueByPrompt = revenuePrompts;
 
     // --- Gemini hero ---
     const gemini = leaderboard.find(b=>/^gemini$/i.test(b.brand)) || {};
@@ -654,6 +663,147 @@ window.kpLiveRefresh = async function(){
 
     note.className='kp-note cmd';
     note.textContent='✓ Live from Profound — leaderboard, prompt rankings, revenue & sources updated · '+start+' → '+end;
+
+  } catch(e){
+    note.className='kp-note'; note.textContent='Live call failed: '+e.message;
+  }
+};
+
+// LIVE Press Kit refresh — mirrors diagnose.mjs's 3-stage
+// diagnose → draft → self-evaluate pipeline, called directly from the browser.
+window.kpKitRefresh = async function(){
+  const key = (document.getElementById('kp-kit-input').value || '').trim();
+  const note = document.getElementById('kp-kit-note');
+  if(!key){ note.className='kp-note'; note.textContent='Paste your Anthropic API key first.'; return; }
+
+  const MODEL = 'claude-sonnet-4-6';
+  const MIN_CONFIDENCE = 0.6;
+  const TOP_N_PROMPTS = 5;
+  const hdrs = {
+    'Content-Type': 'application/json',
+    'x-api-key': key,
+    'anthropic-version': '2023-06-01',
+    'anthropic-dangerous-direct-browser-access': 'true',
+  };
+
+  const claude = async (prompt) => {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST', headers: hdrs,
+      body: JSON.stringify({ model: MODEL, max_tokens: 1000, messages: [{ role: 'user', content: prompt }] }),
+    });
+    const json = await resp.json();
+    if(!resp.ok) throw new Error(`Claude call failed (HTTP ${resp.status}): ${json?.error?.message || JSON.stringify(json)}`);
+    const clean = json.content[0].text.replace(/^```(?:json)?\s*/m, '').replace(/\s*```$/m, '').trim();
+    return JSON.parse(clean);
+  };
+
+  const candidates = currentRevenueByPrompt.slice(0, TOP_N_PROMPTS);
+  if(!candidates.length){
+    note.className='kp-note'; note.textContent='No revenue-at-risk prompts available to diagnose.'; return;
+  }
+
+  const fixesLive = [];
+  try {
+    for(let i = 0; i < candidates.length; i++){
+      const p = candidates[i];
+      note.className='kp-note'; note.textContent = `${i+1}/${candidates.length} — diagnosing “${p.prompt}”…`;
+
+      const sources = (outreach.find(o=>o.prompt===p.prompt)?.sources || []).slice(0, 5);
+      const sourceLines = sources.length
+        ? sources.map(s=>`  - ${s.domain} (${s.channel}, ${s.share}% share)`).join('\n')
+        : '  (no citation data available for this prompt)';
+
+      const diagnosis = await claude(`You are an AEO (Answer Engine Optimization) strategist diagnosing why Gemini is buried for a query.
+
+Query: "${p.prompt}"
+Gemini's average position: ${p.avg_position} (above 3 = not in the recommended set)
+
+Top sources LLMs cite when answering this query:
+${sourceLines}
+
+Identify the structural reason Gemini loses here and what content angle would move it into the top 3.
+
+Return ONLY valid JSON — no other text:
+{
+  "root_cause": "one sentence: the structural reason Gemini is buried for this query",
+  "recommended_angle": "one sentence: the specific content angle that would close the gap",
+  "recommended_format": "one of: comparison, how-to, use-case, benchmark, integration-guide",
+  "target_sources": ["domain1", "domain2"]
+}`);
+
+      const draftResult = await claude(`You are writing a content brief for Gemini's marketing team to reclaim LLM visibility for a buried query.
+
+Query: "${p.prompt}"
+Root cause: ${diagnosis.root_cause}
+Recommended angle: ${diagnosis.recommended_angle}
+Recommended format: ${diagnosis.recommended_format}
+Target sources to appear in: ${diagnosis.target_sources.join(', ')}
+
+Write a 2-3 sentence brief the team could act on this week.
+Rules:
+- Be specific to this exact query — no generic AI marketing copy
+- Ground the recommended angle in what those winning domains typically cover (their audience, content type, and editorial focus) — you don't have their page content, so don't invent specific claims from them; instead make sure the angle fits what those domains would actually publish or discuss
+- Position Gemini positively; do NOT mention or disparage any competitors
+
+Return ONLY valid JSON — no other text:
+{
+  "draft": "your 2-3 sentence brief here"
+}`);
+
+      const evalResult = await claude(`You are a quality auditor reviewing a content brief. Score it strictly against three criteria.
+
+Original query: "${p.prompt}"
+Cited sources the brief should reference: ${diagnosis.target_sources.join(', ')}
+
+Brief to evaluate:
+"${draftResult.draft}"
+
+Criteria (all must be true to pass):
+1. grounded — Does the recommended angle and distribution channel fit what the winning domains (${diagnosis.target_sources.join(', ')}) typically cover — their audience type, content format, and editorial focus? Mark FALSE only if the brief recommends an angle that is clearly mismatched with what those domains publish (e.g. suggesting a deep technical whitepaper for a Reddit community, or a consumer how-to for an enterprise integration site). We only have domain names, not page content, so do NOT penalise the brief for failing to quote specific claims from those sources.
+2. on_brand — Does it position Gemini positively WITHOUT mentioning or disparaging any competitors?
+3. specific — Is it specific to this exact query ("${p.prompt}"), not generic AI marketing copy?
+
+Return ONLY valid JSON — no other text:
+{
+  "grounded": true or false,
+  "on_brand": true or false,
+  "specific": true or false,
+  "confidence": 0.0 to 1.0,
+  "reason": "one sentence explaining the score and any concerns"
+}`);
+
+      const pass = evalResult.grounded && evalResult.on_brand && evalResult.specific && evalResult.confidence >= MIN_CONFIDENCE;
+      if(pass){
+        fixesLive.push({ prompt: p.prompt, root_cause: diagnosis.root_cause, recommended_channel: diagnosis.recommended_format, draft: draftResult.draft, confidence: evalResult.confidence });
+      } else {
+        console.log(`Rejected "${p.prompt}": grounded=${evalResult.grounded} on_brand=${evalResult.on_brand} specific=${evalResult.specific} confidence=${evalResult.confidence} — ${evalResult.reason}`);
+      }
+    }
+
+    if(fixesLive.length){
+      document.getElementById('kit').innerHTML = fixesLive.map(f=>{
+        const srcs = (outreach.find(o=>o.prompt===f.prompt)?.sources || []);
+        const srcsHtml = srcs.length ? `<div class="fix-sources">
+          <div class="fix-sources-label">Target sources</div>
+          <div class="out-srcs">${srcs.map(s=>`
+            <div class="out-src">
+              <span class="od">${s.domain}</span>
+              <span class="oc ${s.channel}">${s.channel}</span>
+            </div>`).join('')}
+          </div></div>` : '';
+        return `<div class="fix">
+          <div class="for">Counter for: <span>&ldquo;${f.prompt}&rdquo;</span></div>
+          ${srcsHtml}
+          <div class="draft">${f.draft}</div>
+        </div>`;
+      }).join('');
+    } else {
+      document.getElementById('kit').innerHTML =
+        `<div class="kit-empty"><b>No briefs accepted</b>None of the ${candidates.length} diagnosed prompts passed the quality gate (grounded, on-brand, specific, confidence ≥ ${MIN_CONFIDENCE}). Check the browser console for per-prompt rejection reasons, or try again.</div>`;
+    }
+
+    note.className='kp-note cmd';
+    note.textContent = `✓ ${fixesLive.length}/${candidates.length} briefs accepted and regenerated live via Claude — nothing was saved to pressroom.json.`;
 
   } catch(e){
     note.className='kp-note'; note.textContent='Live call failed: '+e.message;
