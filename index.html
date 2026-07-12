@@ -132,30 +132,12 @@
   footer .mark{font-family:"Bodoni Moda",serif;font-style:italic;font-size:22px;margin-bottom:8px}
   footer .meta{font-family:"Archivo",sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft)}
 
-  /* ---- revenue at risk band ---- */
-  .rev-band{padding:46px 0 52px;border-top:1px solid var(--rule)}
-  .rev-header{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:10px}
-  .rev-kicker{font-family:"Archivo",sans-serif;font-size:11px;letter-spacing:.34em;text-transform:uppercase;
-    color:var(--crimson);font-weight:700;margin-bottom:10px}
-  .rev-figure{font-family:"Bodoni Moda",serif;font-weight:700;font-size:clamp(56px,8vw,96px);
-    line-height:1;color:var(--crimson);letter-spacing:-.02em}
-  .rev-fig-label{font-family:"Archivo",sans-serif;font-size:11px;letter-spacing:.22em;
-    text-transform:uppercase;color:var(--ink-soft);margin-top:5px}
-  .rev-fig-sub{font-style:italic;font-size:15px;color:var(--ink-soft);margin-top:3px}
-  .rev-rhs{text-align:right;padding-bottom:6px}
-  .rev-toggle{display:inline-flex;gap:0;margin-bottom:10px}
-  .rev-toggle button{font-family:"Archivo",sans-serif;font-size:10px;letter-spacing:.2em;
-    text-transform:uppercase;padding:7px 16px;border:1px solid var(--crimson);background:transparent;
-    color:var(--crimson);cursor:pointer;transition:background .15s,color .15s}
-  .rev-toggle button:first-child{border-right:none;border-radius:2px 0 0 2px}
-  .rev-toggle button:last-child{border-radius:0 2px 2px 0}
-  .rev-toggle button.active{background:var(--crimson);color:#fff}
-  .rev-caption{font-family:"Archivo",sans-serif;font-size:10px;letter-spacing:.18em;
-    text-transform:uppercase;color:var(--crimson);min-height:14px}
+  /* ---- prompts at risk (revenue) ---- */
+  .rev-total-line{font-family:"Archivo",sans-serif;font-size:14px;color:var(--ink-soft);
+    letter-spacing:.02em;padding-top:14px;margin:2px 0 4px;border-top:1px solid var(--rule-soft)}
+  .rev-total-line b{color:var(--ink);font-weight:600}
   .rev-chain{font-family:"Archivo",sans-serif;font-size:12px;color:var(--ink-soft);
-    letter-spacing:.04em;margin-bottom:36px;border-left:2px solid var(--rule-soft);padding-left:14px}
-  .rev-table-head h4{font-family:"Bodoni Moda",serif;font-size:clamp(24px,3vw,36px);
-    font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
+    letter-spacing:.04em;margin-bottom:20px;border-left:2px solid var(--rule-soft);padding-left:14px}
   .rev-framing{font-style:italic;color:var(--ink-soft);font-size:17px;
     max-width:700px;margin-bottom:22px;line-height:1.55}
   .methodology{margin-top:16px;margin-bottom:32px}
@@ -164,6 +146,12 @@
   .methodology summary::before{content:"▸";font-size:9px;transition:transform .2s}
   details[open].methodology summary::before{content:"▾"}
   .methodology .method-body{font-size:15px;color:var(--ink-soft);line-height:1.65;margin-top:12px;max-width:700px;border-left:2px solid var(--rule);padding-left:16px}
+  .formula-block{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;line-height:1.7;
+    white-space:pre-wrap;background:var(--cream-deep);color:var(--ink);border-left:2px solid var(--crimson);
+    border-radius:2px;padding:14px 16px;margin-top:14px;max-width:700px}
+  .formula-legend{font-family:"Archivo",sans-serif;font-size:13px;color:var(--ink-soft);line-height:1.9;
+    list-style:none;margin-top:10px;max-width:700px}
+  .formula-legend b{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink);font-weight:600}
   .leaks{width:100%;border-collapse:collapse}
   .leaks th{font-family:"Archivo",sans-serif;font-size:10px;letter-spacing:.2em;
     text-transform:uppercase;color:var(--ink-soft);padding:0 12px 13px;
@@ -245,36 +233,6 @@
       <div class="stats" id="stats"></div>
     </div>
 
-    <div id="rev-band" class="rev-band reveal" style="animation-delay:.24s">
-      <div class="rev-header">
-        <div class="rev-lhs">
-          <div class="rev-kicker">Revenue at Risk</div>
-          <div class="rev-figure" id="rev-total">—</div>
-          <div class="rev-fig-label">/ year</div>
-          <div class="rev-fig-sub">across the sampled prompt set</div>
-        </div>
-        <div class="rev-rhs">
-          <div class="rev-toggle">
-            <button id="rev-btn-sampled" class="active" onclick="revToggle('sampled')">Sampled</button>
-            <button id="rev-btn-volume" onclick="revToggle('volume')">At true query volume (<span id="rev-mult-label">20</span>×)</button>
-          </div>
-          <div class="rev-caption" id="rev-caption"></div>
-        </div>
-      </div>
-      <div class="rev-chain" id="rev-chain"></div>
-      <details class="methodology">
-        <summary>Methodology</summary>
-        <p class="method-body">For each prompt, we start with the trailing 30 days of demand (mentions), then apply an &lsquo;inclusion gap&rsquo; &mdash; a measure of how far Gemini sits below a competitive top-3 position, capped at 10 spots down. That gap is scaled to reflect how much visibility is actually being lost: a brand buried at position 13 loses more potential consideration than one sitting at position 4. From there, we apply two conversion assumptions: that 15% of users who&rsquo;d see a better-ranked competitor would consider switching, and 3% of those would actually convert &mdash; multiplied by annual contract value per seat. This uses an assumed annual contract value of $240 per seat for Gemini &mdash; an estimate, not a disclosed or confirmed figure. The result is the annualized revenue exposure represented by one month of lost visibility &mdash; a directional estimate for prioritizing which gaps matter most, not a precise forecast.</p>
-      </details>
-      <div class="rev-table-head"><h4>The Leaks No One Looks For</h4></div>
-      <p class="rev-framing">Each is too small for a human to chase. Together, across every buried question, they are the cost of losing the verticals.</p>
-      <table class="leaks">
-        <thead><tr><th>#</th><th>Prompt</th><th>Avg. Position</th><th>At Risk</th></tr></thead>
-        <tbody id="leaks-body"></tbody>
-      </table>
-      <p id="leaks-note" class="rev-framing" style="margin-top:10px;font-style:italic"></p>
-    </div>
-
     <section class="reveal">
       <div class="sec-head">
         <h3>The Standings</h3>
@@ -289,6 +247,35 @@
         <tbody id="standings-body"></tbody>
       </table>
       <p class="press-note">Note: This table tracks AI assistant products specifically; parent companies (e.g. Google, OpenAI, Anthropic, Microsoft) are tracked separately and excluded here to keep the comparison apples-to-apples. Share of Voice reflects each product&rsquo;s share of the full AI-assistant category as tracked by Profound &mdash; not a share limited to the products shown in this table &mdash; so the percentages here intentionally don&rsquo;t sum to 100%.</p>
+    </section>
+
+    <section class="reveal" id="rev-band">
+      <div class="sec-head">
+        <h3>Prompts at Risk</h3>
+        <div class="note">Revenue Exposure</div>
+      </div>
+      <p class="clip-intro">Individual prompts ranked by estimated revenue exposure.</p>
+      <table class="leaks">
+        <thead><tr><th>#</th><th>Prompt</th><th>Avg. Position</th><th>At Risk</th></tr></thead>
+        <tbody id="leaks-body"></tbody>
+      </table>
+      <p id="leaks-note" class="rev-framing" style="margin-top:10px;font-style:italic"></p>
+      <div class="rev-total-line">Total revenue at risk, across the sampled prompt set: <b id="rev-total">—</b> / year</div>
+      <div class="rev-chain" id="rev-chain"></div>
+      <details class="methodology">
+        <summary>Methodology</summary>
+        <p class="method-body">For each prompt, we start with the trailing 30 days of demand (mentions), then apply an &lsquo;inclusion gap&rsquo; &mdash; a measure of how far Gemini sits below a competitive top-3 position, capped at 10 spots down. That gap is scaled to reflect how much visibility is actually being lost: a brand buried at position 13 loses more potential consideration than one sitting at position 4. From there, we apply two conversion assumptions: that 15% of users who&rsquo;d see a better-ranked competitor would consider switching, and 3% of those would actually convert &mdash; multiplied by annual contract value per seat. This uses an assumed annual contract value of $240 per seat for Gemini &mdash; an estimate, not a disclosed or confirmed figure. The result is the annualized revenue exposure represented by one month of lost visibility &mdash; a directional estimate for prioritizing which gaps matter most, not a precise forecast.</p>
+        <div class="formula-block">revenue_at_risk = mentions &times; inclusion_gap &times; 0.15 &times; 0.03 &times; $240
+
+where inclusion_gap = min(avg_position &minus; 3, 10) / 10</div>
+        <ul class="formula-legend">
+          <li><b>mentions</b> &mdash; sampled prompt volume</li>
+          <li><b>inclusion_gap</b> &mdash; how far below top-3 position, capped at 10 spots, scaled 0&ndash;1</li>
+          <li><b>0.15</b> &mdash; consideration rate (share of users who&rsquo;d consider switching)</li>
+          <li><b>0.03</b> &mdash; conversion rate (share of those who&rsquo;d actually convert)</li>
+          <li><b>$240</b> &mdash; annual contract value per seat</li>
+        </ul>
+      </details>
     </section>
 
     <section class="reveal">
@@ -487,8 +474,6 @@ if(fixes.length){
   const band = document.getElementById('rev-band');
   if(!rev || !rev.total_at_risk){ if(band) band.style.display='none'; return; }
   const a = rev.assumptions || {};
-  const effectiveMult = (a.volume_multiplier && a.volume_multiplier > 1) ? a.volume_multiplier : 20;
-  document.getElementById('rev-mult-label').textContent = effectiveMult;
   const fmtMoney = n => '$'+Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
   document.getElementById('rev-total').textContent = fmtMoney(rev.total_at_risk);
   document.getElementById('rev-chain').textContent = [
@@ -507,19 +492,7 @@ if(fixes.length){
     </tr>`).join('');
   const ln = document.getElementById('leaks-note');
   if(ln && allPrompts.length > 8)
-    ln.textContent = `Showing the top 8 of ${allPrompts.length} qualifying prompts by revenue at risk — the ${fmtMoney(rev.total_at_risk)} total above reflects all ${allPrompts.length}.`;
-  window.revToggle = function(mode){
-    document.getElementById('rev-btn-sampled').classList.toggle('active', mode==='sampled');
-    document.getElementById('rev-btn-volume').classList.toggle('active', mode==='volume');
-    const mult = mode==='volume' ? effectiveMult : 1;
-    document.getElementById('rev-total').textContent = fmtMoney(rev.total_at_risk * mult);
-    document.getElementById('rev-caption').textContent =
-      mode==='volume' ? 'extrapolated — set VOLUME_MULTIPLIER' : '';
-    document.querySelectorAll('#leaks-body td.lk-risk').forEach(td=>{
-      td.textContent = fmtMoney(parseFloat(td.dataset.base) * mult);
-    });
-  };
-
+    ln.textContent = `Showing the top 8 of ${allPrompts.length} qualifying prompts by revenue at risk — the ${fmtMoney(rev.total_at_risk)} total below reflects all ${allPrompts.length}.`;
 })();
 
 // live refresh (demo mode — safe, no client-side API calls)
@@ -649,17 +622,7 @@ window.kpLiveRefresh = async function(){
       <tr><td>${i+1}</td><td>&ldquo;${p.prompt}&rdquo;</td><td class="lk-pos">${p.avg_position}</td><td class="lk-risk" data-base="${p.revenue_at_risk}">${fmtMoney(p.revenue_at_risk)}</td></tr>`).join('');
     const lnLive = document.getElementById('leaks-note');
     if(lnLive && revenuePrompts.length > 8)
-      lnLive.textContent = `Showing the top 8 of ${revenuePrompts.length} qualifying prompts by revenue at risk — the ${fmtMoney(total_at_risk)} total above reflects all ${revenuePrompts.length}.`;
-    window.revToggle = function(mode){
-      document.getElementById('rev-btn-sampled').classList.toggle('active',mode==='sampled');
-      document.getElementById('rev-btn-volume').classList.toggle('active',mode==='volume');
-      const mult = mode==='volume' ? 20 : 1;
-      document.getElementById('rev-total').textContent = fmtMoney(total_at_risk*mult);
-      document.getElementById('rev-caption').textContent = mode==='volume' ? 'extrapolated — set VOLUME_MULTIPLIER' : '';
-      document.querySelectorAll('#leaks-body td.lk-risk').forEach(td=>{
-        td.textContent = fmtMoney(parseFloat(td.dataset.base)*mult);
-      });
-    };
+      lnLive.textContent = `Showing the top 8 of ${revenuePrompts.length} qualifying prompts by revenue at risk — the ${fmtMoney(total_at_risk)} total below reflects all ${revenuePrompts.length}.`;
 
     note.className='kp-note cmd';
     note.textContent='✓ Live from Profound — leaderboard, prompt rankings, revenue & sources updated · '+start+' → '+end;
