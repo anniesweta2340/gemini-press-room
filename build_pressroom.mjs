@@ -67,7 +67,7 @@ const cit = await client.reports.citations({
 });
 const sources = cit.data
   .map(r => ({ domain: r.dimensions[0], share: +(r.metrics[0] * 100).toFixed(2), count: r.metrics[1] }))
-  .sort((a, b) => b.count - a.count)
+  .sort((a, b) => b.share - a.share || b.count - a.count)
   .slice(0, 20);
 
 const gemini = leaderboard.find(b => b.brand === "Gemini");

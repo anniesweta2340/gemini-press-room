@@ -428,7 +428,8 @@ document.getElementById("standings-body").innerHTML = DATA.leaderboard.map((b,i)
 
 // sources
 const maxShare = Math.max(...DATA.top_sources.map(s=>s.share));
-document.getElementById("sources").innerHTML = DATA.top_sources.slice(0,12).map((s,i)=>{
+const top12Sources = DATA.top_sources.slice(0,12);
+document.getElementById("sources").innerHTML = top12Sources.map((s,i)=>{
   const flagged = /reddit/i.test(s.domain);
   return `<div class="source ${flagged?'flagged':''}">
     <div class="rk">${i+1}</div>
@@ -437,6 +438,9 @@ document.getElementById("sources").innerHTML = DATA.top_sources.slice(0,12).map(
     <div class="pct">${s.share}%</div>
   </div>`;
 }).join("");
+const top12Share = top12Sources.reduce((sum,s)=>sum+s.share,0);
+document.getElementById("sources").insertAdjacentHTML("afterend",
+  `<div class="fix-sources-label">Top 12 cited domains &middot; ${top12Share.toFixed(1)}% of all citations — the remainder is distributed across a long tail of lower-frequency sources.</div>`);
 const topSource = DATA.top_sources[0];
 if(topSource && /reddit/i.test(topSource.domain)){
   document.getElementById("press-note").innerHTML =
