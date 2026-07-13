@@ -186,9 +186,9 @@
       "count": 5564
     },
     {
-      "domain": "linkedin.com",
-      "share": 1.09,
-      "count": 2991
+      "domain": "arxiv.org",
+      "share": 1.4,
+      "count": 2697
     },
     {
       "domain": "openai.com",
@@ -196,14 +196,19 @@
       "count": 2758
     },
     {
-      "domain": "arxiv.org",
-      "share": 1.4,
-      "count": 2697
+      "domain": "linkedin.com",
+      "share": 1.09,
+      "count": 2991
     },
     {
       "domain": "google.com",
       "share": 0.86,
       "count": 2014
+    },
+    {
+      "domain": "g2.com",
+      "share": 0.62,
+      "count": 992
     },
     {
       "domain": "substack.com",
@@ -216,49 +221,19 @@
       "count": 1189
     },
     {
-      "domain": "siliconflow.com",
-      "share": 0.5,
-      "count": 1050
-    },
-    {
-      "domain": "ycombinator.com",
-      "share": 0.39,
-      "count": 1029
-    },
-    {
-      "domain": "g2.com",
-      "share": 0.62,
-      "count": 992
-    },
-    {
-      "domain": "techradar.com",
-      "share": 0.5,
-      "count": 928
-    },
-    {
-      "domain": "usefini.com",
-      "share": 0.38,
-      "count": 927
-    },
-    {
-      "domain": "facebook.com",
-      "share": 0.29,
-      "count": 919
-    },
-    {
       "domain": "pcmag.com",
       "share": 0.52,
       "count": 905
     },
     {
-      "domain": "microsoft.com",
-      "share": 0.38,
-      "count": 903
+      "domain": "siliconflow.com",
+      "share": 0.5,
+      "count": 1050
     },
     {
-      "domain": "dev.to",
-      "share": 0.39,
-      "count": 876
+      "domain": "techradar.com",
+      "share": 0.5,
+      "count": 928
     },
     {
       "domain": "trustpilot.com",
@@ -269,6 +244,31 @@
       "domain": "anthropic.com",
       "share": 0.42,
       "count": 815
+    },
+    {
+      "domain": "ycombinator.com",
+      "share": 0.39,
+      "count": 1029
+    },
+    {
+      "domain": "dev.to",
+      "share": 0.39,
+      "count": 876
+    },
+    {
+      "domain": "usefini.com",
+      "share": 0.38,
+      "count": 927
+    },
+    {
+      "domain": "microsoft.com",
+      "share": 0.38,
+      "count": 903
+    },
+    {
+      "domain": "facebook.com",
+      "share": 0.29,
+      "count": 919
     }
   ],
   "revenue": {
